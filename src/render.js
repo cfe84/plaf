@@ -1,6 +1,7 @@
 const marked = require("marked");
 const path = require("path");
 const fs = require("fs");
+const handlebars = require("handlebars")
 
 const TYPE_FOLDER = "folder";
 const TYPE_MD = "md";
@@ -77,13 +78,16 @@ const render = (inputFolder, outputFolder, defaultTemplate) => {
     const parsedContent = parseContent(content);
     const rendered = marked(fixMdLinks(replaceRefs(replaceTags(replaceFootNotes(parsedContent.content)))));
     const template = loadTemplate(parsedContent.headers);
-    let result = template;
-    const title = (parsedContent.headers && parsedContent.headers.title) ? parsedContent.headers.title : path.basename(file).replace(".md", "");
-    result = result.replace(new RegExp("{title}", "gi"), title);
-    result = result.replace(new RegExp("{content}", "gi"), rendered);
+
+    const formatter = handlebars.compile(template);
+    const values = parseContent.headers || {};
+    if (!values.title)
+      values.title = path.basename(file).replace(".md", "");
+    values.content = rendered;
+    result = formatter(values)
     return {
       rendered: result,
-      title,
+      title: values.title,
       file: file.substring(0, file.length - 3) + ".html",
       tags: parsedContent.tags || []
     };
@@ -114,7 +118,11 @@ const render = (inputFolder, outputFolder, defaultTemplate) => {
       .sort(f => f.type === TYPE_FOLDER ? -1 : 1)
       .map(item => `<li class="item-${item.type}"><a href="${item.file + (item.type === TYPE_FOLDER ? "/index.html" : "")}">${item.title}</a></li>`)
       .join("\n");
-    const indexContent = defaultTemplate.replace(new RegExp("{title}", "g"), folder).replace(new RegExp("{content}", "g"), `<ul class="post-list">${list}</ul>`);
+    const template = handlebars.compile(defaultTemplate);
+    const indexContent = template({
+      title: folder,
+      content: `<ul class="post-list">${list}</ul>`
+    });
     fs.writeFileSync(path.join(folder, "index.html"), indexContent)
   }
 
