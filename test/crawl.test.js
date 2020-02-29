@@ -25,7 +25,7 @@ describe("crawl", () => {
 
     // assess
     const properties = Object.getOwnPropertyNames(folders);
-    console.log(JSON.stringify(output, null, 2))
+    // console.log(JSON.stringify(output, null, 2))
     properties.splice(1).forEach(propertyName => {
       const folder = folders[propertyName];
       const matchingOutput = output.find(out => out.path === propertyName)

@@ -4,6 +4,7 @@ const crawl = require("./src/crawl")
 const fs = require("fs");
 const path = require("path")
 const handlebars = require("handlebars")
+const marked = require("marked");
 
 const options = [
   { name: "out", alias: "o", type: String, multiple: false },
@@ -17,7 +18,7 @@ let inputFolder = process.cwd();
 let outputFolder = "rendered";
 let defaultTemplate = DEFAULT_TEMPLATE;
 
-const deps = { fs, path, handlebars }
+const deps = { fs, path, handlebars, marked }
 
 const command = parseCommandLine(options);
 if (command.out) {

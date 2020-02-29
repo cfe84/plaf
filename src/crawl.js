@@ -1,4 +1,3 @@
-const marked = require("marked");
 const consts = require("./consts");
 
 const tagRegex = /(^| )#([a-zA-Z0-9-_]+)/gm
@@ -72,7 +71,7 @@ const crawl = (inputFolder, outputFolder, defaultTemplate, deps) => {
   const renderMd = (file) => {
     const content = `${deps.fs.readFileSync(file)}`;
     const parsedContent = parseContent(content);
-    const rendered = marked(fixMdLinks(replaceRefs(replaceTags(replaceFootNotes(parsedContent.content)))));
+    const rendered = deps.marked(fixMdLinks(replaceRefs(replaceTags(replaceFootNotes(parsedContent.content)))));
     const template = loadTemplate(parsedContent.headers);
 
     const formatter = deps.handlebars.compile(template);
