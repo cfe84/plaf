@@ -1,5 +1,6 @@
 const { parseCommandLine } = require("yaclip");
 const render = require("./src/render")
+const crawl = require("./src/crawl")
 const fs = require("fs");
 const path = require("path")
 
@@ -26,4 +27,5 @@ if (command.template) {
   defaultTemplate = `${fs.readFileSync(command.template.value)}`;
 }
 
-render(inputFolder, outputFolder, defaultTemplate)
+const folderContent = crawl(inputFolder, outputFolder, defaultTemplate);
+render(folderContent, outputFolder, defaultTemplate)
