@@ -1,0 +1,26 @@
+{
+  "name": "plaf",
+  "version": "1.0.0",
+  "description": "Low profile static website generator / template engine based on mustache",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cfe84/kb.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cfe84/kb/issues"
+  },
+  "bin": {
+    "plaf": "bin/plaf"
+  },
+  "homepage": "https://github.com/cfe84/kb#readme",
+  "dependencies": {
+    "marked": "^0.8.0",
+    "yaclip": "^1.1.1"
+  }
+}
