@@ -3,6 +3,7 @@ const render = require("./src/render")
 const crawl = require("./src/crawl")
 const fs = require("fs");
 const path = require("path")
+const handlebars = require("handlebars")
 
 const options = [
   { name: "out", alias: "o", type: String, multiple: false },
@@ -16,6 +17,8 @@ let inputFolder = process.cwd();
 let outputFolder = "rendered";
 let defaultTemplate = DEFAULT_TEMPLATE;
 
+const deps = { fs, path, handlebars }
+
 const command = parseCommandLine(options);
 if (command.out) {
   outputFolder = command.out.value;
@@ -27,5 +30,5 @@ if (command.template) {
   defaultTemplate = `${fs.readFileSync(command.template.value)}`;
 }
 
-const folderContent = crawl(inputFolder, outputFolder, defaultTemplate);
-render(folderContent, outputFolder, defaultTemplate)
+const folderContent = crawl(inputFolder, outputFolder, defaultTemplate, deps);
+render(folderContent, outputFolder, defaultTemplate, deps)

@@ -1,13 +1,10 @@
 const marked = require("marked");
-const path = require("path");
-const fs = require("fs");
-const handlebars = require("handlebars")
 const consts = require("./consts");
 
 const tagRegex = /(^| )#([a-zA-Z0-9-_]+)/gm
 
 
-const crawl = (inputFolder, outputFolder, defaultTemplate) => {
+const crawl = (inputFolder, outputFolder, defaultTemplate, deps) => {
 
   const fixMdLinks = (content) => {
     const regex = /.md(#\w+)?\)/g
@@ -65,24 +62,23 @@ const crawl = (inputFolder, outputFolder, defaultTemplate) => {
   }
 
   const loadTemplate = (headers) => {
-    if (headers && headers.template && fs.existsSync(headers.template)) {
-      return fs.readFileSync(headers.template);
+    if (headers && headers.template && deps.fs.existsSync(headers.template)) {
+      return deps.fs.readFileSync(headers.template);
     } else {
       return defaultTemplate
     }
   }
 
-
   const renderMd = (file) => {
-    const content = `${fs.readFileSync(file)}`;
+    const content = `${deps.fs.readFileSync(file)}`;
     const parsedContent = parseContent(content);
     const rendered = marked(fixMdLinks(replaceRefs(replaceTags(replaceFootNotes(parsedContent.content)))));
     const template = loadTemplate(parsedContent.headers);
 
-    const formatter = handlebars.compile(template);
+    const formatter = deps.handlebars.compile(template);
     const values = parsedContent.headers || {};
     if (!values.title)
-      values.title = path.basename(file).replace(".md", "");
+      values.title = deps.path.basename(file).replace(".md", "");
     values.content = rendered;
     result = formatter(values)
     return {
@@ -101,32 +97,32 @@ const crawl = (inputFolder, outputFolder, defaultTemplate) => {
   }
 
   const crawlFolder = (inputFolder) => {
-    const files = fs.readdirSync(inputFolder);
+    const files = deps.fs.readdirSync(inputFolder);
     const res = files.map(file => {
       if (isIgnored(file)) {
         return {
           type: "ignore"
         }
       }
-      const filePath = path.join(inputFolder, file)
-      const stats = fs.lstatSync(filePath);
+      const filePath = deps.path.join(inputFolder, file)
+      const stats = deps.fs.lstatSync(filePath);
       if (stats.isDirectory()) {
         const content = crawlFolder(filePath);
         return {
           type: consts.fileType.folder,
           name: file,
           file: file,
-          title: path.basename(file),
+          title: deps.path.basename(file),
           content
         }
-      } else if (path.extname(file) === ".md") {
+      } else if (deps.path.extname(file) === ".md") {
         const res = renderMd(filePath)
         return {
           type: consts.fileType.md,
           rendered: res.rendered,
           title: res.title,
           tags: res.tags,
-          file: path.basename(res.file),
+          file: deps.path.basename(res.file),
           name: file
         }
       } else {
