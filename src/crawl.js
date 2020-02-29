@@ -90,13 +90,11 @@ const crawl = (inputFolder, outputFolder, defaultTemplate, deps) => {
   }
 
   function isIgnored(file) {
-    return file === ".git"
-      || file === ".gitignore"
-      || file === "z_tools"
+    return file[0] === "."
       || file === outputFolder
   }
 
-  const crawlFolder = (inputFolder) => {
+  const crawlFolder = (inputFolder, inputRelativePath = "") => {
     const files = deps.fs.readdirSync(inputFolder);
     const res = files.map(file => {
       if (isIgnored(file)) {
@@ -105,15 +103,15 @@ const crawl = (inputFolder, outputFolder, defaultTemplate, deps) => {
         }
       }
       const filePath = deps.path.join(inputFolder, file)
+      const relativePath = deps.path.join(inputRelativePath, file).replace(/^\//, "");
       const stats = deps.fs.lstatSync(filePath);
       if (stats.isDirectory()) {
-        const content = crawlFolder(filePath);
+        const content = crawlFolder(filePath, relativePath);
         return {
           type: consts.fileType.folder,
-          name: file,
-          file: file,
+          filename: file,
           path: filePath,
-          title: deps.path.basename(file),
+          relativePath,
           content
         }
         // } else if (deps.path.extname(file) === ".md") {
@@ -130,7 +128,8 @@ const crawl = (inputFolder, outputFolder, defaultTemplate, deps) => {
         return {
           type: consts.fileType.file,
           path: filePath,
-          name: file
+          relativePath,
+          filename: file
         }
       }
     })
@@ -148,7 +147,7 @@ const crawl = (inputFolder, outputFolder, defaultTemplate, deps) => {
     return res;
   }
 
-  const folderContent = crawlFolder(inputFolder);
+  const folderContent = crawlFolder(inputFolder, "");
 
   return folderContent;
 }
