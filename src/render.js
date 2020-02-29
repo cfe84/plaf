@@ -80,7 +80,7 @@ const render = (inputFolder, outputFolder, defaultTemplate) => {
     const template = loadTemplate(parsedContent.headers);
 
     const formatter = handlebars.compile(template);
-    const values = parseContent.headers || {};
+    const values = parsedContent.headers || {};
     if (!values.title)
       values.title = path.basename(file).replace(".md", "");
     values.content = rendered;
