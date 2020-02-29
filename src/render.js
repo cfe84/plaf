@@ -6,20 +6,6 @@ const render = (folderContent, outputFolder, defaultTemplate, deps) => {
     deps.fs.copyFileSync(input, output)
   }
 
-  const rmFolder = (folder) => {
-    const files = deps.fs.readdirSync(folder);
-    files.forEach(file => {
-      const fullpath = deps.path.join(folder, file)
-      const stats = deps.fs.lstatSync(fullpath);
-      if (stats.isDirectory()) {
-        rmFolder(fullpath);
-      } else {
-        deps.fs.unlinkSync(fullpath)
-      }
-    })
-    deps.fs.rmdirSync(folder)
-  }
-
   const generateIndex = (folder, content) => {
     const list = content
       .filter(f => f.type !== consts.fileType.file)

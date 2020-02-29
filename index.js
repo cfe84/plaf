@@ -1,10 +1,16 @@
 const { parseCommandLine } = require("yaclip");
-const render = require("./src/render")
-const crawl = require("./src/crawl")
 const fs = require("fs");
 const path = require("path")
 const handlebars = require("handlebars")
 const marked = require("marked");
+const crawl = require("./src/crawl")
+const preprocess = require("./src/preprocess")
+const processMd = require("./src/processMd")
+const copyFiles = require("./src/copyFiles");
+const cleanup = require("./src/cleanup");
+
+
+const render = require("./src/render")
 
 const options = [
   { name: "out", alias: "o", type: String, multiple: false },
@@ -31,5 +37,10 @@ if (command.template) {
   defaultTemplate = `${fs.readFileSync(command.template.value)}`;
 }
 
-const folderContent = crawl(inputFolder, outputFolder, defaultTemplate, deps);
-render(folderContent, outputFolder, defaultTemplate, deps)
+let folderContent = crawl(inputFolder, outputFolder, defaultTemplate, deps);
+preprocess(folderContent);
+processMd(folderContent, deps);
+cleanup(outputFolder, deps);
+copyFiles(folderContent, outputFolder, deps);
+
+//render(folderContent, outputFolder, defaultTemplate, deps)
