@@ -4,7 +4,17 @@
   "description": "Low profile static website generator / template engine based on mustache",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test",
+    "watch": "npm-watch"
+  },
+  "watch": {
+    "test": {
+      "patterns": [
+        "src",
+        "test"
+      ],
+      "extensions": "js"
+    }
   },
   "repository": {
     "type": "git",
@@ -23,5 +33,12 @@
     "handlebars": "^4.7.3",
     "marked": "^0.8.0",
     "yaclip": "^1.1.1"
+  },
+  "devDependencies": {
+    "mocha": "^7.1.0",
+    "node-watch": "^0.6.3",
+    "npm-watch": "^0.6.0",
+    "should": "^13.2.3",
+    "testdouble": "^3.13.0"
   }
 }
