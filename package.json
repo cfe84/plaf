@@ -1,6 +1,6 @@
 {
   "name": "plaf",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Low profile static website generator / template engine based on mustache",
   "main": "index.js",
   "scripts": {
