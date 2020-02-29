@@ -112,19 +112,20 @@ const crawl = (inputFolder, outputFolder, defaultTemplate, deps) => {
           type: consts.fileType.folder,
           name: file,
           file: file,
+          path: filePath,
           title: deps.path.basename(file),
           content
         }
-      } else if (deps.path.extname(file) === ".md") {
-        const res = renderMd(filePath)
-        return {
-          type: consts.fileType.md,
-          rendered: res.rendered,
-          title: res.title,
-          tags: res.tags,
-          file: deps.path.basename(res.file),
-          name: file
-        }
+        // } else if (deps.path.extname(file) === ".md") {
+        //   const res = renderMd(filePath)
+        //   return {
+        //     type: consts.fileType.md,
+        //     rendered: res.rendered,
+        //     title: res.title,
+        //     tags: res.tags,
+        //     file: deps.path.basename(res.file),
+        //     name: file
+        //   }
       } else {
         return {
           type: consts.fileType.file,
@@ -133,6 +134,16 @@ const crawl = (inputFolder, outputFolder, defaultTemplate, deps) => {
         }
       }
     })
+      .reduce((result, file) => {
+        if (file.type === "folder") {
+          result.push(file)
+          const content = file.content;
+          return result.concat(content)
+        } else {
+          result.push(file);
+        }
+        return result;
+      }, [])
       .filter(file => file.type !== "ignore");
     return res;
   }
