@@ -7,8 +7,8 @@ const generateIndex = (content, outputFolder, name, deps) => {
       .sort((f1, f2) => f1.name > f2.name ? -1 : 1)
       .map(item => {
         const path = item.type === consts.fileType.folder
-          ? item.relativePath + "/index.html"
-          : item.relativePath.replace(/\.md$/i, ".html");
+          ? item.filename + "/index.html"
+          : item.filename.replace(/\.md$/i, ".html");
         return `<li class="item-${item.type}"><a href="${path}">${item.title}</a></li>`;
       })
       .join("\n");
@@ -24,6 +24,7 @@ const generateIndex = (content, outputFolder, name, deps) => {
     .filter(f => f.type === consts.fileType.folder)
     .concat([{
       title: name,
+      filename: "",
       relativePath: "",
       content: content.filter(file => file.relativePath.indexOf("/") < 0)
     }])

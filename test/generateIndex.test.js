@@ -7,12 +7,14 @@ describe("renderMd", () => {
   // given
   const mdFile = {
     type: consts.fileType.md,
+    filename: "mdFile.md",
     relativePath: "subfolder/mdFile.md",
     title: "title-1",
     properties: { title: 'title-1' }
   };
   const mdFileCustomLayout = {
     type: consts.fileType.md,
+    filename: "mdFileCustom.md",
     relativePath: "subfolder/mdFileCustom.md",
     title: "title-2",
     properties: { title: 'title-2' }
@@ -20,6 +22,7 @@ describe("renderMd", () => {
   const folder = {
     type: consts.fileType.folder,
     title: "subfolder",
+    filename: "subfolder",
     relativePath: 'subfolder',
     content: [mdFile, mdFileCustomLayout]
   };
@@ -45,17 +48,17 @@ describe("renderMd", () => {
   it("renders indexes in subfolders", () => {
     td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "subfolder", "index.html"),
       td.matchers.argThat(content => content.startsWith("default: # subfolder - ") &&
-        content.indexOf("subfolder/mdFile.html") > 0 &&
-        content.indexOf("subfolder/mdFileCustom.html") > 0 &&
+        content.indexOf("mdFile.html") > 0 &&
+        content.indexOf("mdFileCustom.html") > 0 &&
         content.indexOf("title-1") > 0 &&
         content.indexOf("title-2") > 0 &&
         content.indexOf("title-2") > content.indexOf("title-1")
       )));
     td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "/index.html"),
       td.matchers.argThat(content => content.startsWith("default: # blerh - ") &&
-        content.indexOf("subfolder/mdFile.html") < 0 &&
-        content.indexOf("subfolder/mdFileCustom.html") < 0 &&
-        content.indexOf("subfolder") > 0
+        content.indexOf("mdFile.html") < 0 &&
+        content.indexOf("mdFileCustom.html") < 0 &&
+        content.indexOf("subfolder/index.html") > 0
       )));
   })
 });
