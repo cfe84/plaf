@@ -1,5 +1,8 @@
 const cleanup = (outputFolder, deps) => {
   const rmFolder = (folder) => {
+    if (!deps.fs.existsSync(folder)) {
+      return;
+    }
     const files = deps.fs.readdirSync(folder);
     files.forEach(file => {
       const fullpath = deps.path.join(folder, file)

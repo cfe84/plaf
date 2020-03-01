@@ -40,8 +40,9 @@ const crawl = (inputFolder, outputFolder, defaultTemplate, deps) => {
           content
         }
       } else {
+        const type = /\.md$/i.exec(file);
         return {
-          type: consts.fileType.file,
+          type: !!type ? consts.fileType.md : consts.fileType.file,
           path: filePath,
           relativePath,
           filename: file

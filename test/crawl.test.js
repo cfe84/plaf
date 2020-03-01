@@ -8,11 +8,11 @@ describe("crawl", () => {
     // prepare
     const folders = {
       "start": { type: "folder", name: "start", content: ["markdownFile.md", "textFile.txt", "subfolder"] },
-      "start/markdownFile.md": { name: "markdownFile.md", type: "file", content: "Markdown" },
+      "start/markdownFile.md": { name: "markdownFile.md", type: "file", expectedType: "md", content: "Markdown" },
       "start/textFile.txt": { name: "textFile.txt", type: "file", content: "Text file" },
       "start/.textFile.txt": { name: "textFile.txt", ignored: true, type: "file", content: "Text file" },
       "start/subfolder": { name: "subfolder", type: "folder", content: ["markdown2.md", "subsubfolder"] },
-      "start/subfolder/markdown2.md": { name: "markdown2.md", type: "file", content: "Markdown again" },
+      "start/subfolder/markdown2.md": { name: "markdown2.md", type: "file", expectedType: "md", content: "Markdown again" },
       "start/subfolder/subsubfolder": { name: "subsubfolder", type: "folder", content: ["file.txt"] },
       "start/subfolder/subsubfolder/file.txt": { name: "file.txt", type: "file", content: "Text" }
     };
@@ -33,7 +33,7 @@ describe("crawl", () => {
         should(matchingOutput).be.undefined();
       } else {
         should(matchingOutput).not.be.undefined();
-        should(matchingOutput.type).eql(folder.type);
+        should(matchingOutput.type).eql(folder.expectedType || folder.type);
         should(matchingOutput.filename).eql(folder.name);
         should(matchingOutput.relativePath).eql(propertyName.replace("start/", ""));
       }

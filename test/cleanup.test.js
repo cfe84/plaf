@@ -10,8 +10,9 @@ describe("cleanup", () => {
       td.when(lstat.isDirectory()).thenReturn(isDir)
       return lstat;
     }
-    const fakeFs = td.object(["readdirSync", "lstatSync", "unlinkSync", "rmdirSync"]);
+    const fakeFs = td.object(["existsSync", "readdirSync", "lstatSync", "unlinkSync", "rmdirSync"]);
 
+    td.when(fakeFs.existsSync(td.matchers.anything())).thenReturn(true)
     const files = [
       "start/folder/markdown.md",
       "start/folder/.hidden.md",
@@ -42,5 +43,28 @@ describe("cleanup", () => {
     td.verify(fakeFs.rmdirSync("start"), { times: 0 })
     files.forEach(file => td.verify(fakeFs.unlinkSync(file), { times: 1 }))
     folders.forEach(folder => td.verify(fakeFs.rmdirSync(folder.name)))
+  })
+
+  it("doesnt break on directory not found", () => {
+    // prepare
+    const createFakeLstat = (isDir) => {
+      const lstat = td.object(["isDirectory"]);
+      td.when(lstat.isDirectory()).thenReturn(isDir)
+      return lstat;
+    }
+    const fakeFs = td.object(["existsSync", "rmdirSync"]);
+
+    td.when(fakeFs.existsSync("folder")).thenReturn(false);
+
+    const deps = {
+      fs: fakeFs,
+      path: fakePath
+    }
+
+    // when
+    cleanup("folder", deps)
+
+    //then
+    td.verify(fakeFs.rmdirSync("folder"), { times: 0 })
   })
 })
