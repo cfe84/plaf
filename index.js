@@ -24,8 +24,7 @@ const options = [
 
 let inputFolder = process.cwd();
 let outputFolder = "rendered";
-const DEFAULT_TEMPLATE = fs.readFileSync(path.join(__dirname, "src", "default.handlebars")).toString();
-let defaultTemplate = DEFAULT_TEMPLATE;
+let defaultTemplate = null;
 let templateFolder = ".plaf";
 let name = "Root";
 
@@ -41,21 +40,7 @@ if (command["template-folder"]) {
   templateFolder = command["template-folder"].value;
 }
 if (command.template) {
-  let templateName = command.template.value;
-  if (fs.existsSync(templateName)) {
-    defaultTemplate = `${fs.readFileSync(command.template.value)}`;
-  } else {
-    if (!templateName.endsWith(".handlebars")) {
-      templateName += ".handlebars";
-    }
-    templateName = path.join(templateFolder, templateName);
-    if (fs.existsSync(templateName)) {
-      defaultTemplate = `${fs.readFileSync(templateName)}`
-    } else {
-      console.error(`Could not load default template: Neither `)
-      process.exit(1);
-    }
-  }
+  defaultTemplate = command.template.value;
 }
 if (command.name) {
   name = command.name.value
@@ -64,7 +49,7 @@ if (command.name) {
 const deps = { fs, path, handlebars, marked }
 deps.getTemplate = templateFactory(defaultTemplate, templateFolder, deps)
 
-let folderContent = crawl(inputFolder, outputFolder, defaultTemplate, deps);
+let folderContent = crawl(inputFolder, outputFolder, deps);
 preprocess(folderContent);
 processMd(folderContent, deps);
 cleanup(outputFolder, deps);

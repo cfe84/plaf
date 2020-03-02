@@ -3,16 +3,7 @@ const consts = require("./consts");
 const tagRegex = /(^| )#([a-zA-Z0-9-_]+)/gm
 
 
-const crawl = (inputFolder, outputFolder, defaultTemplate, deps) => {
-
-
-  const loadTemplate = (headers) => {
-    if (headers && headers.template && deps.fs.existsSync(headers.template)) {
-      return deps.fs.readFileSync(headers.template);
-    } else {
-      return defaultTemplate
-    }
-  }
+const crawl = (inputFolder, outputFolder, deps) => {
 
   function isIgnored(file) {
     return file[0] === "."

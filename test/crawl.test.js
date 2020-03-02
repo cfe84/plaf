@@ -21,7 +21,7 @@ describe("crawl", () => {
     const deps = { fs, path }
 
     // exec
-    const output = crawl("start", "dfsf", "", deps);
+    const output = crawl("start", "dfsf", deps);
 
     // assess
     const properties = Object.getOwnPropertyNames(folders);
