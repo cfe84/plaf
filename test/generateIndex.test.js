@@ -3,7 +3,7 @@ const td = require("testdouble");
 const generateIndex = require("../src/generateIndex")
 const fakePath = require("./fakePath")
 
-describe("renderMd", () => {
+describe("generate index", () => {
   // given
   const mdFile = {
     type: consts.fileType.md,

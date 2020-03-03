@@ -48,14 +48,16 @@ const processMd = (content, deps) => {
         }
       })
       .reduce((aggregatedObject, line) => { aggregatedObject[line.key] = line.value; return aggregatedObject }, {});
-    const tagMatches = onlyContent.match(tagRegex);
-    const tags = tagMatches ? tagMatches.map(tag => tag.substring(1)) : [];
     const res = {
       content: onlyContent,
-      headers: headers,
-      tags
+      headers: headers
     }
     return res;
+  }
+  const getTags = (onlyContent) => {
+    const tagMatches = onlyContent.match(tagRegex);
+    const tags = tagMatches ? tagMatches.map(tag => tag.trim().substring(1)) : [];
+    return tags;
   }
 
   const renderMd = (file) => {
@@ -63,8 +65,8 @@ const processMd = (content, deps) => {
     const content = `${deps.fs.readFileSync(path)}`;
     const parsedContent = parseContent(content);
     const rendered = deps.marked(fixMdLinks(replaceRefs(replaceTags(replaceFootNotes(parsedContent.content)))));
-
     const properties = parsedContent.headers || {};
+    properties.tags = getTags(parsedContent.content);
     if (properties.title)
       file.title = properties.title;
     else

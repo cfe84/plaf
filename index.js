@@ -12,6 +12,7 @@ const buildDirectoryStructure = require("./src/buildDirectoryStructure")
 const copyFiles = require("./src/copyFiles");
 const renderMd = require("./src/renderMd");
 const generateIndex = require("./src/generateIndex")
+const generateTags = require("./src/generateTags")
 
 const options = [
   { name: "name", alias: "n", type: String, multiple: false, description: "Name for the root" },
@@ -25,7 +26,6 @@ const options = [
 let inputFolder = process.cwd();
 let outputFolder = "rendered";
 let defaultTemplate = null;
-let templateFolder = ".plaf";
 let name = inputFolder;
 
 
@@ -36,6 +36,7 @@ if (command.out) {
 if (command.in) {
   inputFolder = command.in.value;
 }
+let templateFolder = path.join(inputFolder, ".plaf");
 if (command["template-folder"]) {
   templateFolder = command["template-folder"].value;
 }
@@ -57,3 +58,4 @@ buildDirectoryStructure(outputFolder, folderContent, deps);
 copyFiles(folderContent, outputFolder, deps);
 renderMd(folderContent, outputFolder, deps)
 generateIndex(folderContent, outputFolder, deps)
+generateTags(folderContent, outputFolder, deps)
