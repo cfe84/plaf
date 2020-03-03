@@ -3,7 +3,7 @@ const generateIndex = (content, outputFolder, name, deps) => {
 
   const generateIndexForFolder = (folder) => {
     const list = folder.content
-      .sort((f1, f2) => f1.type === f2.type ? 0 : f1.type === consts.fileType.folder ? 1 : -1)
+      .sort((f1, f2) => f1.type === f2.type ? 0 : f1.type === consts.fileType.folder ? -1 : 1)
       .sort((f1, f2) => f1.name > f2.name ? -1 : 1)
       .map(item => {
         const path = item.type === consts.fileType.folder
