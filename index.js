@@ -26,7 +26,7 @@ const options = [
 let inputFolder = process.cwd();
 let outputFolder = "rendered";
 let defaultTemplate = null;
-let name = inputFolder;
+let name = path.basename(inputFolder);
 
 
 const command = parseCommandLine(options);

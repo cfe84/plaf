@@ -11,7 +11,6 @@ const generateTags = (content, outputFolder, deps) => {
     content
       .filter(file => file.type === consts.fileType.md)
   const tags = getTags(md);
-  console.log(tags)
   deps.fs.mkdirSync(deps.path.join(outputFolder, "tags"));
   const template = deps.getTemplate({})
   tags.forEach(tag => {

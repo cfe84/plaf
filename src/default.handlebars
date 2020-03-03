@@ -2,10 +2,70 @@
 
 <head>
   <title>{{title}}</title>
+  <style>
+    body {
+      font-size: 1.2em;
+      font-family: Helvetica, Arial, sans-serif;
+      max-width: 600px;
+      margin: auto;
+    }
+
+    header {
+      text-align: center
+    }
+
+    .site-title {
+      font-size: 3em;
+      margin-top: 15px;
+      margin-bottom: 15px;
+    }
+
+    p {
+      margin-bottom: 15px;
+    }
+
+    .post-list {
+      padding: 0;
+      display: block;
+      width: 100%
+    }
+
+    .post-list li {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      list-style: none;
+      font-size: 2em;
+    }
+
+    .post-list li:hover {
+      background-color: #ddd;
+    }
+
+    .item-folder {
+      background-color: #eee;
+      font-weight: 600;
+    }
+
+    .post-list a {
+      text-decoration: none;
+      color: inherit
+    }
+
+    .item-folder {}
+  </style>
 </head>
 
 <body>
-  <h1>{{title}}</h1>
+  <header>
+    <a href="/index.html">Back to root</a> | <a href="./index.html">Back to folder</a> | <a href="../index.html">Back
+      one level</a>
+    <div class="site-title">
+      {{title}}
+    </div>
+  </header>
   <div>{{{content}}}</div>
 </body>
 
