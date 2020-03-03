@@ -12,6 +12,13 @@ describe("buildDirectoryStructure", () => {
       relativePath: 'markdown.md',
       filename: 'markdown.md'
     };
+    const rootFolder = {
+      type: consts.fileType.folder,
+      filename: 'start',
+      path: 'start',
+      relativePath: '',
+      content: [file1]
+    };
     const folder1 = {
       type: consts.fileType.folder,
       filename: 'subfolder',
@@ -20,8 +27,9 @@ describe("buildDirectoryStructure", () => {
       content: [file1]
     };
     const crawled = [
+      rootFolder,
+      folder1,
       file1,
-      folder1
     ];
 
     const fakeFs = td.object(["mkdirSync"])
@@ -34,7 +42,7 @@ describe("buildDirectoryStructure", () => {
     buildDirectoryStructure("rendered", crawled, deps);
 
     // assess
-    td.verify(fakeFs.mkdirSync("rendered"));
+    td.verify(fakeFs.mkdirSync("rendered/"), { times: 1 });
     td.verify(fakeFs.mkdirSync("rendered/subfolder"));
     td.verify(fakeFs.mkdirSync("rendered/markdown.md"), { times: 0 });
   })

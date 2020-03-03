@@ -26,7 +26,15 @@ describe("renderMd", () => {
     relativePath: 'subfolder',
     content: [mdFile, mdFileCustomLayout]
   };
+  const rootfolder = {
+    type: consts.fileType.folder,
+    title: "root",
+    filename: "root",
+    relativePath: '',
+    content: [folder]
+  };
   const crawled = [
+    rootfolder,
     mdFile,
     mdFileCustomLayout,
     folder
@@ -42,9 +50,28 @@ describe("renderMd", () => {
   const outputDirectory = "out-123"
 
   // when
-  generateIndex(crawled, outputDirectory, "blerh", deps)
+  generateIndex(crawled, outputDirectory, deps)
 
   // then
+  it("renders folder in root", () => {
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "index.html"),
+      td.matchers.argThat(content => content.startsWith("default: # root - ") &&
+        content.indexOf("subfolder") > 0
+      )));
+  })
+  it("does not render content from subfolders in root", () => {
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "index.html"),
+      td.matchers.argThat(content => content.startsWith("default: # root - ") &&
+        content.indexOf("mdFile.html") < 0 &&
+        content.indexOf("title-1") < 0
+      )));
+  })
+  it("does not render root folder within root folder itself", () => {
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "index.html"),
+      td.matchers.argThat(content => content.startsWith("default: # root - ") &&
+        content.indexOf(">root<") < 0
+      )));
+  })
   it("renders indexes in subfolders", () => {
     td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "subfolder", "index.html"),
       td.matchers.argThat(content => content.startsWith("default: # subfolder - ") &&
@@ -53,12 +80,6 @@ describe("renderMd", () => {
         content.indexOf("title-1") > 0 &&
         content.indexOf("title-2") > 0 &&
         content.indexOf("title-2") > content.indexOf("title-1")
-      )));
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "/index.html"),
-      td.matchers.argThat(content => content.startsWith("default: # blerh - ") &&
-        content.indexOf("mdFile.html") < 0 &&
-        content.indexOf("mdFileCustom.html") < 0 &&
-        content.indexOf("subfolder/index.html") > 0
       )));
   })
 });

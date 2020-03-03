@@ -26,7 +26,7 @@ let inputFolder = process.cwd();
 let outputFolder = "rendered";
 let defaultTemplate = null;
 let templateFolder = ".plaf";
-let name = "Root";
+let name = inputFolder;
 
 
 const command = parseCommandLine(options);
@@ -50,10 +50,10 @@ const deps = { fs, path, handlebars, marked }
 deps.getTemplate = templateFactory(defaultTemplate, templateFolder, deps)
 
 let folderContent = crawl(inputFolder, outputFolder, deps);
-preprocess(folderContent);
+preprocess(folderContent, name);
 processMd(folderContent, deps);
 cleanup(outputFolder, deps);
 buildDirectoryStructure(outputFolder, folderContent, deps);
 copyFiles(folderContent, outputFolder, deps);
 renderMd(folderContent, outputFolder, deps)
-generateIndex(folderContent, outputFolder, name, deps)
+generateIndex(folderContent, outputFolder, deps)

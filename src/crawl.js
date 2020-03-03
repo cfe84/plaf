@@ -2,6 +2,15 @@ const consts = require("./consts");
 
 const tagRegex = /(^| )#([a-zA-Z0-9-_]+)/gm
 
+function createFolder(file, filePath, relativePath, content) {
+  return {
+    type: consts.fileType.folder,
+    filename: file,
+    path: filePath,
+    relativePath,
+    content
+  };
+}
 
 const crawl = (inputFolder, outputFolder, deps) => {
 
@@ -23,13 +32,7 @@ const crawl = (inputFolder, outputFolder, deps) => {
       const stats = deps.fs.lstatSync(filePath);
       if (stats.isDirectory()) {
         const content = crawlFolder(filePath, relativePath);
-        return {
-          type: consts.fileType.folder,
-          filename: file,
-          path: filePath,
-          relativePath,
-          content
-        }
+        return createFolder(file, filePath, relativePath, content)
       } else {
         const type = /\.md$/i.exec(file);
         return {
@@ -40,23 +43,18 @@ const crawl = (inputFolder, outputFolder, deps) => {
         }
       }
     })
-      .reduce((result, file) => {
-        if (file.type === "folder") {
-          result.push(file)
-          const content = file.content;
-          return result.concat(content)
-        } else {
-          result.push(file);
-        }
-        return result;
-      }, [])
       .filter(file => file.type !== "ignore");
     return res;
   }
 
-  const folderContent = crawlFolder(inputFolder, "");
+  const flatten = (folder) =>
+    folder.content.reduce((res, file) =>
+      res.concat(file.type === consts.fileType.folder ? flatten(file) : [file]), [folder])
 
-  return folderContent;
+  const content = crawlFolder(inputFolder, "");
+  const rootFolderContent = createFolder(inputFolder, inputFolder, "", content)
+  const allFilesAndFolders = flatten(rootFolderContent)
+  return allFilesAndFolders;
 }
 
 module.exports = crawl;

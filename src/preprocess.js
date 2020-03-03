@@ -1,6 +1,6 @@
 const consts = require("./consts")
 
-const preprocess = (content) => {
+const preprocess = (content, name) => {
   content.forEach(item => {
     switch (item.type) {
       case consts.fileType.md:
@@ -14,6 +14,11 @@ const preprocess = (content) => {
         break;
     }
   })
+
+  const root = content.find(element => element.relativePath === "")
+  if (root && name) {
+    root.title = name;
+  }
 }
 
 module.exports = preprocess

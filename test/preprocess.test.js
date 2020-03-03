@@ -24,16 +24,26 @@ describe("preprocess", () => {
       relativePath: 'subfolder',
       content: [mdFile, txtFile]
     };
+    const rootfolder = {
+      type: consts.fileType.folder,
+      filename: 'rootfolder',
+      path: 'start',
+      relativePath: '',
+      content: [folder]
+    };
     const crawled = [
       mdFile,
+      rootfolder,
       txtFile,
       folder
     ];
 
     // when
-    preprocess(crawled);
+    preprocess(crawled, "new root title");
 
     // then
+
+    should(rootfolder.title).eql("new root title");
     should(mdFile.title).eql("markdown");
     should(txtFile.title).eql("text.txt");
     should(folder.title).eql("subfolder");

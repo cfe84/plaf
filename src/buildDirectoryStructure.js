@@ -1,7 +1,7 @@
 const consts = require("./consts")
 
 const buildDirectoryStructure = (outputFolder, content, deps) => {
-  deps.fs.mkdirSync(outputFolder)
+  // deps.fs.mkdirSync(outputFolder)
   content
     .filter(item => item.type === consts.fileType.folder)
     .map(folder => folder.relativePath)

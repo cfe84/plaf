@@ -1,5 +1,5 @@
 const consts = require("./consts");
-const generateIndex = (content, outputFolder, name, deps) => {
+const generateIndex = (content, outputFolder, deps) => {
 
   const generateIndexForFolder = (folder) => {
     const list = folder.content
@@ -22,12 +22,6 @@ const generateIndex = (content, outputFolder, name, deps) => {
 
   content
     .filter(f => f.type === consts.fileType.folder)
-    .concat([{
-      title: name,
-      filename: "",
-      relativePath: "",
-      content: content.filter(file => file.relativePath.indexOf("/") < 0)
-    }])
     .forEach(generateIndexForFolder);
 }
 
