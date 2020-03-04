@@ -13,15 +13,31 @@ const copyFiles = require("./src/copyFiles");
 const renderMd = require("./src/renderMd");
 const generateIndex = require("./src/generateIndex")
 const generateTags = require("./src/generateTags")
+const usage = require("command-line-usage")
 
 const options = [
+  { name: "help", alias: "h", type: Boolean, multiple: false, description: "Display this message" },
   { name: "name", alias: "n", type: String, multiple: false, description: "Name for the root" },
-  { name: "out", alias: "o", type: String, multiple: false, description: "Folder where to render" },
+  { name: "out", alias: "o", type: String, multiple: false, description: "Folder where to render. This will be wiped out, be sure you're ok with that first" },
   { name: "in", alias: "i", type: String, multiple: false, description: "Folder which will be crawled and rendered" },
   { name: "template", alias: "t", type: String, multiple: false, description: "Default template file" },
   { name: "template-folder", alias: "T", type: String, multiple: false, description: "Folder where templates will be looked for" }
 ]
 
+
+function displayHelp() {
+  const structure = [
+    {
+      header: 'Plaf - static site generator'
+    },
+    {
+      header: 'Commands',
+      optionList: options
+    }
+  ];
+  const message = usage(structure);
+  console.log(message);
+}
 
 let inputFolder = process.cwd();
 let outputFolder = "rendered";
@@ -30,6 +46,10 @@ let name = path.basename(inputFolder);
 
 
 const command = parseCommandLine(options);
+if (command.help) {
+  displayHelp();
+  return;
+}
 if (command.out) {
   outputFolder = command.out.value;
 }

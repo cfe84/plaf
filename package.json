@@ -1,7 +1,7 @@
 {
   "name": "plaf",
   "version": "1.3.0",
-  "description": "Low profile static website generator / template engine based on mustache",
+  "description": "Run plaf in a directory with markdown files, and PLAF you have a static website",
   "main": "index.js",
   "scripts": {
     "test": "mocha test",
@@ -18,18 +18,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cfe84/kb.git"
+    "url": "git+https://github.com/cfe84/plaf.git"
   },
-  "author": "",
+  "author": "Charles Feval",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cfe84/kb/issues"
+    "url": "https://github.com/cfe84/plaf/issues"
   },
   "bin": {
     "plaf": "bin/plaf"
   },
   "homepage": "https://github.com/cfe84/kb#readme",
   "dependencies": {
+    "command-line-usage": "^6.1.0",
     "handlebars": "^4.7.3",
     "marked": "^0.8.0",
     "yaclip": "^1.1.1"
