@@ -28,7 +28,7 @@
   "bin": {
     "plaf": "bin/plaf"
   },
-  "homepage": "https://github.com/cfe84/kb#readme",
+  "homepage": "https://github.com/cfe84/plaf#readme",
   "dependencies": {
     "command-line-usage": "^6.1.0",
     "handlebars": "^4.7.3",
