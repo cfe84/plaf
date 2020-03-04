@@ -26,28 +26,37 @@ describe("generate index", () => {
     relativePath: 'subfolder',
     content: [mdFile, mdFileCustomLayout]
   };
+  const folder2 = {
+    type: consts.fileType.folder,
+    title: "subfolder2",
+    filename: "subfolder2",
+    relativePath: 'subfolder2',
+    content: []
+  };
   const rootfolder = {
     type: consts.fileType.folder,
     title: "root",
     filename: "root",
     relativePath: '',
-    content: [folder]
+    content: [folder, folder2]
   };
   const crawled = [
     rootfolder,
     mdFile,
     mdFileCustomLayout,
-    folder
+    folder,
+    folder2
   ];
 
   const fakeGetTemplate = (props1) => (props2) => `${props1.template || "default"}: # ${props2.title} - ${props2.content}`
-  const fakeFs = td.object(["writeFileSync"]);
+  const outputDirectory = "out-123"
+  const fakeFs = td.object(["writeFileSync", "existsSync"]);
+  td.when(fakeFs.existsSync(fakePath.join(outputDirectory, "subfolder2", "index.html"))).thenReturn(true)
   deps = {
     path: fakePath,
     fs: fakeFs,
     getTemplate: fakeGetTemplate
   }
-  const outputDirectory = "out-123"
 
   // when
   generateIndex(crawled, outputDirectory, deps)
@@ -81,5 +90,9 @@ describe("generate index", () => {
         content.indexOf("title-2") > 0 &&
         content.indexOf("title-2") > content.indexOf("title-1")
       )));
+  });
+  it("doesn't override custom indexes", () => {
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "subfolder2", "index.html"), td.matchers.anything()),
+      { times: 0 });
   })
 });
