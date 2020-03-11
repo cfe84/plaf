@@ -1,0 +1,32 @@
+<html>
+
+<head>
+  <script src="search.js"></script>
+  <script>
+    function s(evt) {
+      const searchResultsComponent = document.getElementById("search-results")
+      const res = search(evt.value)
+      searchResultsComponent.innerHTML = "";
+      res
+        .map(result => {
+          const elt = document.createElement("li");
+          elt.innerHTML = `<a href="${result.file.path}">${result.file.title}</a>`
+          return elt;
+        })
+        .forEach(elt => searchResultsComponent.appendChild(elt));
+
+      console.log(res.map(r => r.file.title));
+    }
+  </script>
+</head>
+
+<body>
+  <input type="text" onkeyup="s(this)">
+  <div>
+    <ul id="search-results">
+
+    </ul>
+  </div>
+</body>
+
+</html>

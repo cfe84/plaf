@@ -72,6 +72,7 @@ const processMd = (content, deps) => {
     else
       properties.title = file.title;
     file.content = rendered;
+    file.mdcontent = parsedContent.content;
     file.properties = properties;
   }
 

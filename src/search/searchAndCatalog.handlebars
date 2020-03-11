@@ -1,0 +1,8 @@
+const search = function(){
+const catalog = {{{catalog}}};
+
+{{{createSearch}}}
+
+const f = s(catalog);
+return (sentence) => f(sentence.split(" ").filter(str => str.match(/\S/)).map(str => str.trim().toLowerCase()));
+}()

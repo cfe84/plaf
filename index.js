@@ -13,6 +13,7 @@ const copyFiles = require("./src/copyFiles");
 const renderMd = require("./src/renderMd");
 const generateIndex = require("./src/generateIndex")
 const generateTags = require("./src/generateTags")
+const generateSearch = require("./src/generateSearch")
 const usage = require("command-line-usage")
 
 const options = [
@@ -21,7 +22,8 @@ const options = [
   { name: "out", alias: "o", type: String, multiple: false, description: "Folder where to render. This will be wiped out, be sure you're ok with that first" },
   { name: "in", alias: "i", type: String, multiple: false, description: "Folder which will be crawled and rendered" },
   { name: "template", alias: "t", type: String, multiple: false, description: "Default template file" },
-  { name: "template-folder", alias: "T", type: String, multiple: false, description: "Folder where templates will be looked for" }
+  { name: "template-folder", alias: "T", type: String, multiple: false, description: "Folder where templates will be looked for" },
+  { name: "generate-search", alias: "s", type: Boolean, multiple: false, description: "Generate a search index (experimental)" }
 ]
 
 
@@ -39,6 +41,7 @@ function displayHelp() {
   console.log(message);
 }
 
+let search = false;
 let inputFolder = process.cwd();
 let outputFolder = "rendered";
 let defaultTemplate = null;
@@ -66,6 +69,9 @@ if (command.template) {
 if (command.name) {
   name = command.name.value
 }
+if (command["generate-search"]) {
+  search = true;
+}
 
 const deps = { fs, path, handlebars, marked }
 deps.getTemplate = templateFactory(defaultTemplate, templateFolder, deps)
@@ -79,3 +85,6 @@ copyFiles(folderContent, outputFolder, deps);
 renderMd(folderContent, outputFolder, deps)
 generateIndex(folderContent, outputFolder, deps)
 generateTags(folderContent, outputFolder, deps)
+if (search) {
+  generateSearch(folderContent, outputFolder, deps)
+}
