@@ -34,7 +34,7 @@ describe("renderMd", () => {
     folder
   ];
 
-  const fakeGetTemplate = (props1) => (props2) => `${props1.template || "default"}: # ${props2.title} - ${props2.content}`
+  const fakeGetTemplate = (props1) => (props2) => `${props1.template || "default"}: # ${props2.properties.title} - ${props2.content}`
   const fakeFs = td.object(["writeFileSync"]);
   deps = {
     path: fakePath,
