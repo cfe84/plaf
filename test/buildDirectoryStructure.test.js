@@ -17,14 +17,14 @@ describe("buildDirectoryStructure", () => {
       filename: 'start',
       path: 'start',
       relativePath: '',
-      content: [file1]
+      files: [file1]
     };
     const folder1 = {
       type: consts.fileType.folder,
       filename: 'subfolder',
       path: 'start/subfolder',
       relativePath: 'subfolder',
-      content: [file1]
+      files: [file1]
     };
     const crawled = [
       rootFolder,

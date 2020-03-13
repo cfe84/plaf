@@ -33,7 +33,7 @@ describe("process markdown", () => {
       path: 'start/subfolder',
       relativePath: 'subfolder',
       title: 'subfolder',
-      content: [mdFile, txtFile]
+      files: [mdFile, txtFile]
     };
     const crawled = [
       mdFile,

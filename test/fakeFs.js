@@ -1,6 +1,6 @@
 const fakeFs = (structure) => {
   return {
-    readdirSync: (filename) => structure[filename].content,
+    readdirSync: (filename) => structure[filename].files,
     lstatSync: (filename) => ({
       isDirectory: () => structure[filename].type === "folder"
     }),

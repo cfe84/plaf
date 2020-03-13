@@ -2,13 +2,13 @@ const consts = require("./consts");
 
 const tagRegex = /(^| )#([a-zA-Z0-9-_]+)/gm
 
-function createFolder(file, filePath, relativePath, content) {
+function createFolderObject(file, filePath, relativePath, files) {
   return {
     type: consts.fileType.folder,
     filename: file,
     path: filePath,
     relativePath,
-    content
+    files
   };
 }
 
@@ -32,7 +32,7 @@ const crawl = (inputFolder, outputFolder, deps) => {
       const stats = deps.fs.lstatSync(filePath);
       if (stats.isDirectory()) {
         const content = crawlFolder(filePath, relativePath);
-        return createFolder(file, filePath, relativePath, content)
+        return createFolderObject(file, filePath, relativePath, content)
       } else {
         const type = /\.md$/i.exec(file);
         return {
@@ -48,11 +48,11 @@ const crawl = (inputFolder, outputFolder, deps) => {
   }
 
   const flatten = (folder) =>
-    folder.content.reduce((res, file) =>
+    folder.files.reduce((res, file) =>
       res.concat(file.type === consts.fileType.folder ? flatten(file) : [file]), [folder])
 
   const content = crawlFolder(inputFolder, "");
-  const rootFolderContent = createFolder(inputFolder, inputFolder, "", content)
+  const rootFolderContent = createFolderObject(inputFolder, inputFolder, "", content)
   const allFilesAndFolders = flatten(rootFolderContent)
   return allFilesAndFolders;
 }

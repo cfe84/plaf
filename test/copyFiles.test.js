@@ -23,7 +23,7 @@ describe("copyFiles", () => {
       filename: 'subfolder',
       path: 'start/subfolder',
       relativePath: 'subfolder',
-      content: [mdFile, txtFile]
+      files: [mdFile, txtFile]
     };
     const crawled = [
       mdFile,

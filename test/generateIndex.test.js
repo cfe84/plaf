@@ -24,21 +24,21 @@ describe("generate index", () => {
     title: "subfolder",
     filename: "subfolder",
     relativePath: 'subfolder',
-    content: [mdFile, mdFileCustomLayout]
+    files: [mdFile, mdFileCustomLayout]
   };
   const folder2 = {
     type: consts.fileType.folder,
     title: "subfolder2",
     filename: "subfolder2",
     relativePath: 'subfolder2',
-    content: []
+    files: []
   };
   const rootfolder = {
     type: consts.fileType.folder,
     title: "root",
     filename: "root",
     relativePath: '',
-    content: [folder, folder2]
+    files: [folder, folder2]
   };
   const crawled = [
     rootfolder,

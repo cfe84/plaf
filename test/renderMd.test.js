@@ -26,7 +26,7 @@ describe("renderMd", () => {
     filename: 'subfolder',
     path: 'start/subfolder',
     relativePath: 'subfolder',
-    content: [mdFile, mdFileCustomLayout]
+    files: [mdFile, mdFileCustomLayout]
   };
   const crawled = [
     mdFile,
