@@ -22,14 +22,14 @@ describe("preprocess", () => {
       filename: 'subfolder',
       path: 'start/subfolder',
       relativePath: 'subfolder',
-      content: [mdFile, txtFile]
+      files: [mdFile, txtFile]
     };
     const rootfolder = {
       type: consts.fileType.folder,
       filename: 'rootfolder',
       path: 'start',
       relativePath: '',
-      content: [folder]
+      files: [folder]
     };
     const crawled = [
       mdFile,

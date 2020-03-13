@@ -62,12 +62,20 @@ Plaf supports yaml headers on your markdown files. Add this to your markdown fil
 ```md
 ---
 title: This is the title
+category: bla
 ---
 
 This is the body
 ```
 
-By default it's using your file names as title. You can override that with the headers. You can add all the headers you want, and use them as variables in your templates.
+By default it's using your file names as title. You can override that with the headers. You can add all the headers you want, and use them as variables in your templates. Plaf also sends its internal values to the template, if you want to use them, including:
+
+- `title`
+- `type`: `md` for markdown files, `folder` for folders.
+- `content` and `mdcontent`: the content.
+- `path`, `relativePath`: files paths
+- `tags`: a list of tags for md files
+- `files`: a list of `files` contained in the folder or tag. These files have the same properties.
 
 **Customize templates per file**
 

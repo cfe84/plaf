@@ -16,11 +16,9 @@ const generateIndex = (content, outputFolder, deps) => {
         return `<li class="item-${item.type}"><a href="${path}">${item.title}</a></li>`;
       })
       .join("\n");
+    folder.content = `<ul class="post-list">${list}</ul>`
     const template = deps.getTemplate({});
-    const indexContent = template({
-      title: folder.title,
-      content: `<ul class="post-list">${list}</ul>`
-    });
+    const indexContent = template(folder);
     deps.fs.writeFileSync(targetFile, indexContent)
   }
 
