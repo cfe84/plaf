@@ -9,6 +9,7 @@ describe("template factory", () => {
   const customTemplatePath = fakePath.join("templates", "custom.handlebars");
   const fullPathTemplatePath = fakePath.join("somewhere", "other-custom.handlebars");
   const customDefaultTemplatePath = fakePath.join("some.handlebars");
+  const allPropertiesTemplatePath = fakePath.join("all.handlebars");
   const customDefaultInFolderPath = fakePath.join("custemplates", "default.handlebars");
   td.when(fakeFs.readFileSync(td.matchers.argThat(name => name.endsWith("src/default.handlebars")))).thenReturn("default")
   td.when(fakeFs.existsSync(customTemplatePath)).thenReturn(true)
@@ -19,6 +20,8 @@ describe("template factory", () => {
   td.when(fakeFs.readFileSync(customDefaultTemplatePath)).thenReturn("customDefault")
   td.when(fakeFs.existsSync(customDefaultInFolderPath)).thenReturn(true)
   td.when(fakeFs.readFileSync(customDefaultInFolderPath)).thenReturn("customDefault2")
+  td.when(fakeFs.existsSync(allPropertiesTemplatePath)).thenReturn(true)
+  td.when(fakeFs.readFileSync(allPropertiesTemplatePath)).thenReturn("{{{prop1}}}-{{{prop2}}}")
 
   deps = {
     fs: fakeFs,
@@ -34,6 +37,8 @@ describe("template factory", () => {
   const customDefaultTemplate = getTemplateWithCustomDefault({})({})
   const getTemplateWithCustomDefaultInFolder = templateFactory(undefined, "custemplates", deps);
   const customDefaultInFolderTemplate = getTemplateWithCustomDefaultInFolder({})({})
+  const getTemplateWithAllProperties = templateFactory(allPropertiesTemplatePath, "other", deps);
+  const allPropertiesFlattened = getTemplateWithAllProperties({})({ prop1: "abc", properties: { prop2: "def" } })
 
   // then
   it("loads templates from layout with no extension", () => should(customTemplate).eql("custom"));
@@ -42,4 +47,5 @@ describe("template factory", () => {
   it("defaults to the default template", () => should(defaultTemplate).eql("default"));
   it("uses custom default template with full path", () => should(customDefaultTemplate).eql("customDefault"));
   it("uses default in templates folder", () => should(customDefaultInFolderTemplate).eql("customDefault2"));
+  it("flattens all values of properties", () => should(allPropertiesFlattened).eql("abc-def"))
 });

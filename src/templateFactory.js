@@ -30,13 +30,24 @@ const templateFactory = (defaultTemplateName, templateFolder, deps) => {
     }
   }
 
+  const copyAndFlattenObject = (obj, res = {}) => {
+    Object.getOwnPropertyNames(obj).forEach(key => {
+      if (key === "properties") {
+        copyAndFlattenObject(obj[key], res)
+      } else {
+        res[key] = obj[key];
+      }
+    })
+    return res;
+  }
+
   const getTemplate = (properties) => {
     let templateFile = loadTemplateFile(properties);
     if (!templateFile) {
       templateFile = defaultTemplate
     }
     const template = handlebars.compile(templateFile)
-    return template
+    return (props) => template(copyAndFlattenObject(props))
   }
 
   return getTemplate;
