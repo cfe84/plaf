@@ -1,0 +1,89 @@
+
+> plaf@1.7.0 test /git/github.com/cfe84/plaf
+> mocha test
+
+
+
+  buildDirectoryStructure
+    ✓ build the directory structure
+
+  cleanup
+    ✓ cleans the directory
+    ✓ doesnt break on directory not found
+
+  copyFiles
+    ✓ copies files
+
+  crawl
+    ✓ gets all folders and repositories
+
+  generate index
+    ✓ renders folder in root
+    ✓ does not render content from subfolders in root
+    ✓ does not render root folder within root folder itself
+    ✓ renders indexes in subfolders
+    ✓ doesn't override custom indexes
+
+  generate tags
+    ✓ creates tags folder
+    ✓ generates tags files
+    ✓ generates tags index
+
+  preprocess
+    ✓ preprocesses items
+
+  process markdown
+    ✓ processes markdown (42ms)
+    ✓ processes markdown with no headers
+    ✓ processes markdown with tags
+
+  renderMd
+    ✓ renders markdown files in templates
+
+  search
+    should lex
+      ✓ lexes words, in lowercase
+      ✓ discards html tags
+      ✓ lexes formatted words
+      ✓ lexes dashes and underscores
+      ✓ should lex words only once
+    should search using catalog
+      ✓ should match exact words
+      ✓ should match files only once with the largest score
+      ✓ should match partial words
+      ✓ should return empty results for no match
+
+  template factory
+    ✓ loads templates from layout with no extension
+    ✓ loads templates from layout with extension
+    ✓ loads templates from fullpath
+    ✓ defaults to the default template
+    ✓ uses custom default template with full path
+    ✓ uses default in templates folder
+    ✓ flattens all values of properties
+
+
+  34 passing (162ms)
+
+-----------------------------|---------|----------|---------|---------|-------------------
+File                         | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-----------------------------|---------|----------|---------|---------|-------------------
+All files                    |   96.18 |    86.42 |   93.68 |   98.12 |                   
+ src                         |   95.56 |    86.96 |   91.18 |   98.12 |                   
+  buildDirectoryStructure.js |     100 |      100 |     100 |     100 |                   
+  cleanup.js                 |     100 |      100 |     100 |     100 |                   
+  consts.js                  |     100 |      100 |     100 |     100 |                   
+  copyFiles.js               |     100 |      100 |     100 |     100 |                   
+  crawl.js                   |   96.43 |    81.82 |     100 |   96.43 | 26                
+  generateIndex.js           |     100 |       60 |     100 |     100 | 10,11             
+  generateTags.js            |     100 |      100 |     100 |     100 |                   
+  preprocess.js              |     100 |     87.5 |     100 |     100 | 19                
+  processMd.js               |   98.04 |       90 |     100 |      98 | 37                
+  renderMd.js                |     100 |      100 |     100 |     100 |                   
+  templateFactory.js         |   82.61 |    95.24 |      50 |   94.87 | 27,28             
+ src/search                  |   98.41 |    83.33 |     100 |   98.11 |                   
+  cataloger.js               |   92.86 |       75 |     100 |   92.86 | 15                
+  createSearch.js            |     100 |      100 |     100 |     100 |                   
+  lex.js                     |     100 |       50 |     100 |     100 | 6                 
+  renderSearch.js            |     100 |      100 |     100 |     100 |                   
+-----------------------------|---------|----------|---------|---------|-------------------

@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha test",
-    "watch": "npm-watch"
+    "watch": "npm-watch",
+    "nyc": "nyc --reporter=text npm run test > test/coverage.txt",
+    "nyc-html": "nyc --reporter=html --report-dir=coverage npm run test"
   },
   "watch": {
     "test": {
@@ -40,6 +42,7 @@
     "mocha": "^7.1.0",
     "node-watch": "^0.6.3",
     "npm-watch": "^0.6.0",
+    "nyc": "^15.0.0",
     "should": "^13.2.3",
     "testdouble": "^3.13.0"
   }
