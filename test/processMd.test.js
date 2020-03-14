@@ -42,7 +42,7 @@ describe("process markdown", () => {
     ];
 
     const fakeFs = td.object(["readFileSync"]);
-    td.when(fakeFs.readFileSync(mdFile.path)).thenReturn("---\ntitle: This is title\ncat: category\n---\n-content-");
+    td.when(fakeFs.readFileSync(mdFile.path)).thenReturn("---\ntitle: This is title\nsomething: \"in quotes\"\ncat: category\ncats: [123,456]---\n-content-");
     const fakeMarked = td.object(["marked"]);
     td.when(fakeMarked.marked("-content-")).thenReturn("marked-content");
 
@@ -57,6 +57,8 @@ describe("process markdown", () => {
     // then
     should(mdFile.title).eql("This is title");
     should(mdFile.properties.cat).eql("category")
+    should(mdFile.properties.something).eql("in quotes");
+    should(mdFile.properties.cats).deepEqual([123, 456]);
     should(mdFile.content).eql("marked-content");
     should(txtFile.content).be.undefined()
   });

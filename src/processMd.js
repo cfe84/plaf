@@ -1,4 +1,5 @@
 const consts = require("../src/consts");
+const yaml = require("yaml-js")
 
 const processMd = (content, deps) => {
   const tagRegex = /(^| )#([a-zA-Z0-9-_]+)/gm
@@ -38,16 +39,7 @@ const processMd = (content, deps) => {
     const headerContent = content.substring(headerStartLineIndex + 4, headerFinishLineIndex).trim();
     const onlyContent = content.substring(headerFinishLineIndex + 4).trim();
     const headerRegex = /^([^:]+)\s*:\s*(.*)/;
-    const headers = headerContent
-      .split("\n")
-      .map(line => {
-        const matches = headerRegex.exec(line);
-        return {
-          key: matches[1],
-          value: matches[2]
-        }
-      })
-      .reduce((aggregatedObject, line) => { aggregatedObject[line.key] = line.value; return aggregatedObject }, {});
+    const headers = yaml.load(headerContent)
     const res = {
       content: onlyContent,
       headers: headers
