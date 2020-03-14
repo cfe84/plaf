@@ -29,7 +29,8 @@ const generateTags = (content, outputFolder, deps) => {
     const rendered = template(tag);
     deps.fs.writeFileSync(deps.path.join(outputFolder, tag.relativePath), rendered);
   })
-  const formattedTags = tags.map(tag => `<li class="item-md"><a href="${tag.tag}.html">${tag.title}</a></li>`).join("\n");
+  tags = tags.sort((a, b) => a.files.length > b.files.length ? -1 : 1)
+  const formattedTags = tags.map(tag => `<li class="item-md"><a href="${tag.tag}.html">${tag.title} (${tag.files.length})</a></li>`).join("\n");
   const tagIndex = {
     title: "Tags",
     content: `<ul class="post-list">${formattedTags}</ul>`,

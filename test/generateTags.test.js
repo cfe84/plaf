@@ -74,6 +74,8 @@ describe("generate tags", () => {
         content.indexOf("tag-1") > 0 &&
         content.indexOf("tag-2") > 0 &&
         content.indexOf("tag-3") > 0 &&
+        content.indexOf("tag-1") > content.indexOf("tag-2") &&
+        content.indexOf("tag-3") > content.indexOf("tag-2") &&
         content.indexOf("l3") > 0 &&
         content.indexOf("-tags-") > 0
       )));
