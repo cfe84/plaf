@@ -46,6 +46,12 @@ const templateFactory = (defaultTemplateName, templateFolder, deps) => {
     if (!templateFile) {
       templateFile = defaultTemplate
     }
+    handlebars.registerHelper("eq", (a, b) => a === b)
+    handlebars.registerHelper("ge", (a, b) => a >= b)
+    handlebars.registerHelper("gt", (a, b) => a > b)
+    handlebars.registerHelper("le", (a, b) => a <= b)
+    handlebars.registerHelper("lt", (a, b) => a < b)
+    handlebars.registerHelper("ne", (a, b) => a !== b)
     const template = handlebars.compile(templateFile)
     return (props) => template(copyAndFlattenObject(props))
   }
