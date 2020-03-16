@@ -53,7 +53,16 @@ const crawl = (inputFolder, outputFolder, deps) => {
 
   const content = crawlFolder(inputFolder, "");
   const rootFolderContent = createFolderObject(inputFolder, inputFolder, "", content)
-  const allFilesAndFolders = flatten(rootFolderContent)
+  let allFilesAndFolders = flatten(rootFolderContent)
+  const resourcesFolder = deps.path.join(inputFolder, ".plaf", "resources");
+
+  if (deps.fs.existsSync(resourcesFolder)) {
+    const resources = crawlFolder(resourcesFolder, "");
+    const resourcesFolderObj = createFolderObject(resourcesFolder, resourcesFolder, "", resources)
+    const flattenedResources = flatten(resourcesFolderObj).splice(1);
+    flattenedResources.forEach(resource => resource.skipIndexing = true)
+    allFilesAndFolders = allFilesAndFolders.concat(flattenedResources);
+  }
   return allFilesAndFolders;
 }
 

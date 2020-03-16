@@ -101,3 +101,7 @@ If you don't want to use a list of the markdown files in the directory but use y
 **Use tags**
 
 If you use tags in your md files, then plaf will use them and generate a tags index.
+
+**Copy resource files**
+
+If you create a `.plaf/resources` directory, plaf will copy everything from it to the render directory, and will not index it. This is useful if you want to include things like fonts or CSS.

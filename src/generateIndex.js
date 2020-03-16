@@ -6,7 +6,11 @@ const generateIndex = (content, outputFolder, deps) => {
     if (deps.fs.existsSync(targetFile)) {
       return;
     }
+    if (folder.skipIndexing) {
+      return
+    }
     const list = folder.files
+      .filter(file => !file.skipIndexing)
       .sort((f1, f2) => f1.type === f2.type ? 0 : f1.type === consts.fileType.folder ? -1 : 1)
       .sort((f1, f2) => f1.name > f2.name ? -1 : 1)
       .map(item => {

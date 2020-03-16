@@ -10,12 +10,16 @@ describe("crawl", () => {
     "start/markdownFile.md": { name: "markdownFile.md", type: "file", expectedType: "md", content: "Markdown" },
     "start/textFile.txt": { name: "textFile.txt", type: "file", content: "Text file" },
     "start/.textFile.txt": { name: "textFile.txt", ignored: true, type: "file", content: "Text file" },
+    "start/.plaf/": { name: "resources", ignored: true, type: "folder", files: ["textFile.txt", "resources"] },
+    "start/.plaf/textFile.txt": { name: "textFile.txt", ignored: true, type: "file", content: "Text file" },
+    "start/.plaf/resources": { name: "resources", ignored: true, type: "folder", files: ["textFile.txt"] },
+    "start/.plaf/resources/textFile.txt": { name: "textFile.txt", type: "file", content: "Text file", targetRelativePath: "textFile.txt", skipIndexing: true },
     "start/subfolder": { name: "subfolder", type: "folder", files: ["markdown2.md", "subsubfolder"] },
     "start/subfolder/markdown2.md": { name: "markdown2.md", type: "file", expectedType: "md", content: "Markdown again" },
     "start/subfolder/subsubfolder": { name: "subsubfolder", type: "folder", files: ["file.txt"] },
     "start/subfolder/subsubfolder/file.txt": { name: "file.txt", type: "file", content: "Text" }
   };
-  const ignored = 1;
+  const ignored = 4;
   const fs = fakeFs(folders);
   const path = fakePath;
   const deps = { fs, path }
@@ -34,7 +38,15 @@ describe("crawl", () => {
         should(matchingOutput).not.be.undefined();
         should(matchingOutput.type).eql(folder.expectedType || folder.type);
         should(matchingOutput.filename).eql(folder.name);
-        should(matchingOutput.relativePath).eql(propertyName.replace("start/", "").replace("start", ""));
+        if (folder.targetRelativePath) {
+          should(matchingOutput.relativePath).eql(folder.targetRelativePath);
+        }
+        else {
+          should(matchingOutput.relativePath).eql(propertyName.replace("start/", "").replace("start", ""));
+        }
+        if (folder.skipIndexing) {
+          should(matchingOutput.skipIndexing).be.true()
+        }
         if (folder.type === "folder") {
           should(matchingOutput.files).have.length(folder.files.length);
         }

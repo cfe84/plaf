@@ -4,7 +4,8 @@ const fakeFs = (structure) => {
     lstatSync: (filename) => ({
       isDirectory: () => structure[filename].type === "folder"
     }),
-    readFileSync: (file) => structure[file]
+    readFileSync: (file) => structure[file],
+    existsSync: (filename) => !!structure[filename]
   }
 }
 

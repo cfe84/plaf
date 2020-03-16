@@ -33,12 +33,20 @@ describe("generate index", () => {
     relativePath: 'subfolder2',
     files: []
   };
+  const skippedIndexingfolder = {
+    type: consts.fileType.folder,
+    title: "subfolder3",
+    filename: "subfolder3",
+    relativePath: 'subfolder3',
+    files: [],
+    skipIndexing: true
+  };
   const rootfolder = {
     type: consts.fileType.folder,
     title: "root",
     filename: "root",
     relativePath: '',
-    files: [folder, folder2]
+    files: [folder, folder2, skippedIndexingfolder]
   };
   const crawled = [
     rootfolder,
@@ -68,6 +76,12 @@ describe("generate index", () => {
         content.indexOf("subfolder") > 0
       )));
   })
+  it("skips hidden folder in root", () => {
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "index.html"),
+      td.matchers.argThat(content => content.startsWith("default: # root - ") &&
+        content.indexOf("subfolder3") < 0
+      )));
+  })
   it("does not render content from subfolders in root", () => {
     td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "index.html"),
       td.matchers.argThat(content => content.startsWith("default: # root - ") &&
@@ -93,6 +107,10 @@ describe("generate index", () => {
   });
   it("doesn't override custom indexes", () => {
     td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "subfolder2", "index.html"), td.matchers.anything()),
+      { times: 0 });
+  })
+  it("doesn't index skipped folders", () => {
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "subfolder3", "index.html"), td.matchers.anything()),
       { times: 0 });
   })
 });
