@@ -1,16 +1,9 @@
 const consts = require("./consts");
 const generateIndex = (content, outputFolder, deps) => {
 
-  const generateIndexForFolder = (folder) => {
-    const targetFile = deps.path.join(outputFolder, folder.relativePath, "index.html");
-    if (deps.fs.existsSync(targetFile)) {
-      return;
-    }
-    if (folder.skipIndexing) {
-      return
-    }
+  const generateIndexForFolder = ({ folder, targetFile }) => {
     const list = folder.files
-      .filter(file => !file.skipIndexing)
+      .filter(file => !file.hidden)
       .sort((f1, f2) => f1.type === f2.type ? 0 : f1.type === consts.fileType.folder ? -1 : 1)
       .sort((f1, f2) => f1.name > f2.name ? -1 : 1)
       .map(item => {
@@ -27,7 +20,13 @@ const generateIndex = (content, outputFolder, deps) => {
   }
 
   content
-    .filter(f => f.type === consts.fileType.folder)
+    .map(folder => ({
+      folder,
+      targetFile: deps.path.join(outputFolder, folder.relativePath, "index.html")
+    }))
+    .filter(({ folder, targetFile }) => folder.type === consts.fileType.folder &&
+      !deps.fs.existsSync(targetFile) &&
+      !folder.skipIndexing)
     .forEach(generateIndexForFolder);
 }
 

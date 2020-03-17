@@ -41,19 +41,29 @@ describe("generate index", () => {
     files: [],
     skipIndexing: true
   };
+  const hiddenfolder = {
+    type: consts.fileType.folder,
+    title: "hiddenSubfolder",
+    filename: "hiddenSubfolder",
+    relativePath: 'hiddenSubfolder',
+    files: [],
+    hidden: true
+  };
   const rootfolder = {
     type: consts.fileType.folder,
     title: "root",
     filename: "root",
     relativePath: '',
-    files: [folder, folder2, skippedIndexingfolder]
+    files: [folder, folder2, skippedIndexingfolder, hiddenfolder]
   };
   const crawled = [
     rootfolder,
     mdFile,
     mdFileCustomLayout,
     folder,
-    folder2
+    folder2,
+    skippedIndexingfolder,
+    hiddenfolder
   ];
 
   const fakeGetTemplate = (props1) => (props2) => `${props1.template || "default"}: # ${props2.title} - ${props2.content}`
@@ -70,16 +80,17 @@ describe("generate index", () => {
   generateIndex(crawled, outputDirectory, deps)
 
   // then
-  it("renders folder in root", () => {
+  it("renders folders in root", () => {
     td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "index.html"),
       td.matchers.argThat(content => content.startsWith("default: # root - ") &&
-        content.indexOf("subfolder") > 0
+        content.indexOf("subfolder") > 0 &&
+        content.indexOf("subfolder3") > 0
       )));
   })
   it("skips hidden folder in root", () => {
     td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "index.html"),
       td.matchers.argThat(content => content.startsWith("default: # root - ") &&
-        content.indexOf("subfolder3") < 0
+        content.indexOf("hiddenSubfolder") < 0
       )));
   })
   it("does not render content from subfolders in root", () => {
@@ -112,5 +123,8 @@ describe("generate index", () => {
   it("doesn't index skipped folders", () => {
     td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "subfolder3", "index.html"), td.matchers.anything()),
       { times: 0 });
+  })
+  it("indexes hidden folders", () => {
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "hiddenSubfolder", "index.html"), td.matchers.anything()));
   })
 });

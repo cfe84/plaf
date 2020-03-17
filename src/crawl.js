@@ -2,12 +2,13 @@ const consts = require("./consts");
 
 const tagRegex = /(^| )#([a-zA-Z0-9-_]+)/gm
 
-function createFolderObject(file, filePath, relativePath, files) {
+function createFolderObject(file, filePath, relativePath, files, hidden) {
   return {
     type: consts.fileType.folder,
     filename: file,
     path: filePath,
     relativePath,
+    hidden,
     files
   };
 }
@@ -19,8 +20,9 @@ const crawl = (inputFolder, outputFolder, deps) => {
       || file === outputFolder
   }
 
-  const crawlFolder = (inputFolder, inputRelativePath = "") => {
+  const crawlFolder = (name, inputFolder, inputRelativePath = "") => {
     const files = deps.fs.readdirSync(inputFolder);
+    const hidden = files.indexOf(".hide") >= 0;
     const res = files.map(file => {
       if (isIgnored(file)) {
         return {
@@ -31,8 +33,7 @@ const crawl = (inputFolder, outputFolder, deps) => {
       const relativePath = deps.path.join(inputRelativePath, file).replace(/^\//, "");
       const stats = deps.fs.lstatSync(filePath);
       if (stats.isDirectory()) {
-        const content = crawlFolder(filePath, relativePath);
-        return createFolderObject(file, filePath, relativePath, content)
+        return crawlFolder(file, filePath, relativePath);
       } else {
         const type = /\.md$/i.exec(file);
         return {
@@ -44,23 +45,24 @@ const crawl = (inputFolder, outputFolder, deps) => {
       }
     })
       .filter(file => file.type !== "ignore");
-    return res;
+    return createFolderObject(name, inputFolder, inputRelativePath, res, hidden);
   }
 
   const flatten = (folder) =>
     folder.files.reduce((res, file) =>
       res.concat(file.type === consts.fileType.folder ? flatten(file) : [file]), [folder])
 
-  const content = crawlFolder(inputFolder, "");
-  const rootFolderContent = createFolderObject(inputFolder, inputFolder, "", content)
+  const rootFolderContent = crawlFolder(inputFolder, inputFolder, "");
   let allFilesAndFolders = flatten(rootFolderContent)
   const resourcesFolder = deps.path.join(inputFolder, ".plaf", "resources");
 
   if (deps.fs.existsSync(resourcesFolder)) {
-    const resources = crawlFolder(resourcesFolder, "");
-    const resourcesFolderObj = createFolderObject(resourcesFolder, resourcesFolder, "", resources)
-    const flattenedResources = flatten(resourcesFolderObj).splice(1);
-    flattenedResources.forEach(resource => resource.skipIndexing = true)
+    const resources = crawlFolder(resourcesFolder, resourcesFolder, "");
+    const flattenedResources = flatten(resources).splice(1);
+    flattenedResources.forEach(resource => {
+      resource.skipIndexing = true;
+      resource.hidden = true;
+    })
     allFilesAndFolders = allFilesAndFolders.concat(flattenedResources);
   }
   return allFilesAndFolders;

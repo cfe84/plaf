@@ -105,3 +105,7 @@ If you use tags in your md files, then plaf will use them and generate a tags in
 **Copy resource files**
 
 If you create a `.plaf/resources` directory, plaf will copy everything from it to the render directory, and will not index it. This is useful if you want to include things like fonts or CSS.
+
+**Hide folders**
+
+Add a `.hide` file in a folder and it won't appear in the index of its parent folder..
