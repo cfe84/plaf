@@ -24,7 +24,9 @@ const templateFactory = (defaultTemplateName, templateFolder, deps) => {
       } else if (deps.fs.existsSync(properties.template)) {
         return `${deps.fs.readFileSync(properties.template)}`;
       } else {
-        console.warn(`Template not found: neither ${templatePath} nor ${properties.template} files were found. Defaulting to default template`)
+        if (properties.template !== "index" && properties.template !== "tags") {
+          console.warn(`Template not found: neither ${templatePath} nor ${properties.template} files were found. Defaulting to default template`)
+        }
         return null;
       }
     }
@@ -42,7 +44,7 @@ const templateFactory = (defaultTemplateName, templateFolder, deps) => {
   }
 
   const getTemplate = (properties) => {
-    let templateFile = loadTemplateFile(properties);
+    let templateFile = loadTemplateFile(copyAndFlattenObject(properties));
     if (!templateFile) {
       templateFile = defaultTemplate
     }
