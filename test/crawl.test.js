@@ -56,11 +56,19 @@ describe("crawl", () => {
       })
   })
 
-  it("scan folders", () => {
+  it("scans folders", () => {
     mappedFolders
       .filter(({ folder }) => !folder.ignored && folder.type === "folder")
       .forEach(({ folder, matchingOutput }) => {
         should(matchingOutput.files).have.length(folder.files.filter(file => file[0] !== ".").length);
+      })
+  })
+
+  it("loads folder templates", () => {
+    mappedFolders
+      .filter(({ folder }) => !folder.ignored && folder.type === "folder")
+      .forEach(({ folder, matchingOutput }) => {
+        should(matchingOutput.properties.template).eql(folder.expectedTemplate || "index");
       })
   })
 
@@ -75,9 +83,9 @@ describe("crawl", () => {
       .filter(({ folder }) => !folder.ignored)
       .forEach(({ matchingOutput, folder }) => {
         if (folder.skipIndexing) {
-          should(matchingOutput.skipIndexing).be.true(`${folder.name} should be skipped`)
+          should(matchingOutput.properties && matchingOutput.properties.skipIndexing).be.true(`${folder.name} should be skipped`)
         } else {
-          should(matchingOutput.skipIndexing).not.be.true();
+          should(matchingOutput.properties && matchingOutput.properties.skipIndexing).not.be.true();
         }
       })
   })
@@ -87,9 +95,9 @@ describe("crawl", () => {
       .filter(({ folder }) => !folder.ignored)
       .forEach(({ matchingOutput, folder }) => {
         if (folder.hidden) {
-          should(matchingOutput.hidden).be.true(`${folder.name} should be hidden`)
+          should(matchingOutput.properties && matchingOutput.properties.hidden).be.true(`${folder.name} should be hidden`)
         } else {
-          should(matchingOutput.hidden).not.be.true();
+          should(!!matchingOutput.properties && matchingOutput.properties.hidden).not.be.true();
         }
       })
   })

@@ -3,7 +3,7 @@ const generateIndex = (content, outputFolder, deps) => {
 
   const generateIndexForFolder = ({ folder, targetFile }) => {
     const list = folder.files
-      .filter(file => !file.hidden)
+      .filter(file => !(file.properties && file.properties.hidden))
       .sort((f1, f2) => f1.type === f2.type ? 0 : f1.type === consts.fileType.folder ? -1 : 1)
       .sort((f1, f2) => f1.name > f2.name ? -1 : 1)
       .map(item => {
@@ -14,7 +14,7 @@ const generateIndex = (content, outputFolder, deps) => {
       })
       .join("\n");
     folder.content = `<ul class="post-list">${list}</ul>`
-    const template = deps.getTemplate({});
+    const template = deps.getTemplate(folder);
     const indexContent = template(folder);
     deps.fs.writeFileSync(targetFile, indexContent)
   }
@@ -26,7 +26,7 @@ const generateIndex = (content, outputFolder, deps) => {
     }))
     .filter(({ folder, targetFile }) => folder.type === consts.fileType.folder &&
       !deps.fs.existsSync(targetFile) &&
-      !folder.skipIndexing)
+      !(folder.properties && folder.properties.skipIndexing))
     .forEach(generateIndexForFolder);
 }
 

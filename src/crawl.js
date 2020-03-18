@@ -1,15 +1,16 @@
 const consts = require("./consts");
 
-const tagRegex = /(^| )#([a-zA-Z0-9-_]+)/gm
-
 function createFolderObject(file, filePath, relativePath, files, hidden) {
   return {
     type: consts.fileType.folder,
     filename: file,
     path: filePath,
     relativePath,
-    hidden,
-    files
+    files,
+    properties: {
+      template: "index",
+      hidden
+    }
   };
 }
 
@@ -60,8 +61,11 @@ const crawl = (inputFolder, outputFolder, deps) => {
     const resources = crawlFolder(resourcesFolder, resourcesFolder, "");
     const flattenedResources = flatten(resources).splice(1);
     flattenedResources.forEach(resource => {
-      resource.skipIndexing = true;
-      resource.hidden = true;
+      if (!resource.properties) {
+        resource.properties = {}
+      }
+      resource.properties.skipIndexing = true;
+      resource.properties.hidden = true;
     })
     allFilesAndFolders = allFilesAndFolders.concat(flattenedResources);
   }
