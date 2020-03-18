@@ -1,16 +1,14 @@
 const consts = require("./consts");
+const yaml = require("yaml-js")
 
-function createFolderObject(file, filePath, relativePath, files, hidden) {
+function createFolderObject(file, filePath, relativePath, files, properties) {
   return {
     type: consts.fileType.folder,
     filename: file,
     path: filePath,
     relativePath,
     files,
-    properties: {
-      template: "index",
-      hidden
-    }
+    properties
   };
 }
 
@@ -21,9 +19,17 @@ const crawl = (inputFolder, outputFolder, deps) => {
       || file === outputFolder
   }
 
+  const loadProperties = (propertyFile) => {
+    const content = `${deps.fs.readFileSync(propertyFile)}`;
+    return yaml.load(content);
+  }
+
   const crawlFolder = (name, inputFolder, inputRelativePath = "") => {
     const files = deps.fs.readdirSync(inputFolder);
-    const hidden = files.indexOf(".hide") >= 0;
+    const propertyFile = deps.path.join(inputFolder, ".plaf")
+    const properties = (files.indexOf(".plaf") >= 0 && !deps.fs.lstatSync(propertyFile).isDirectory())
+      ? loadProperties(propertyFile) : {}
+    if (!properties.template) properties.template = "index";
     const res = files.map(file => {
       if (isIgnored(file)) {
         return {
@@ -46,7 +52,7 @@ const crawl = (inputFolder, outputFolder, deps) => {
       }
     })
       .filter(file => file.type !== "ignore");
-    return createFolderObject(name, inputFolder, inputRelativePath, res, hidden);
+    return createFolderObject(name, inputFolder, inputRelativePath, res, properties);
   }
 
   const flatten = (folder) =>

@@ -14,21 +14,24 @@ describe("crawl", () => {
     "start/.plaf/textFile.txt": { name: "textFile.txt", ignored: true, type: "file", content: "Text file" },
     "start/.plaf/resources": { name: "resources", ignored: true, type: "folder", files: ["textFile.txt"] },
     "start/.plaf/resources/textFile.txt": { name: "textFile.txt", type: "file", content: "Text file", targetRelativePath: "textFile.txt", skipIndexing: true, hidden: true },
-    "start/subfolder": { name: "subfolder", type: "folder", files: ["markdown2.md", "subsubfolder"] },
+    "start/subfolder": { name: "subfolder", type: "folder", files: ["markdown2.md", "subsubfolder", ".plaf"], expectedTemplate: "customTemplate" },
+    "start/subfolder/.plaf": { name: ".plaf", type: "file", ignored: true, content: "template: customTemplate" },
     "start/subfolder/markdown2.md": { name: "markdown2.md", type: "file", expectedType: "md", content: "Markdown again" },
     "start/subfolder/subsubfolder": { name: "subsubfolder", type: "folder", files: ["file.txt"] },
     "start/subfolder/subsubfolder/file.txt": { name: "file.txt", type: "file", content: "Text" },
-    "start/ref": { name: "ref", type: "folder", files: [".hide", "hidden.txt"], hidden: true },
+    "start/ref": { name: "ref", type: "folder", files: [".plaf", "hidden.txt"], hidden: true },
     "start/ref/hidden.txt": { name: "hidden.txt", type: "file", content: "some" },
-    "start/ref/.hide": { name: ".hide", type: "file", content: "some", ignored: true },
+    "start/ref/.plaf": { name: ".plaf", type: "file", ignored: true, content: "hidden: true" },
   };
-  const ignored = 5;
+  const ignored = 6;
   const fs = fakeFs(folders);
   const path = fakePath;
   const deps = { fs, path }
 
+
   // exec
   const output = crawl("start", "dfsf", deps);
+
   // assess
   const properties = Object.getOwnPropertyNames(folders);
   const mappedFolders = properties.map(propertyName => ({
@@ -68,7 +71,8 @@ describe("crawl", () => {
     mappedFolders
       .filter(({ folder }) => !folder.ignored && folder.type === "folder")
       .forEach(({ folder, matchingOutput }) => {
-        should(matchingOutput.properties.template).eql(folder.expectedTemplate || "index");
+        const expected = folder.expectedTemplate || "index"
+        should(matchingOutput.properties.template).eql(expected, `${folder.name} has template ${matchingOutput.properties.template} instead of ${expected}`);
       })
   })
 
@@ -90,14 +94,14 @@ describe("crawl", () => {
       })
   })
 
-  it("handles files that should be hidden", () => {
+  it("handles files which should be hidden", () => {
     mappedFolders
       .filter(({ folder }) => !folder.ignored)
       .forEach(({ matchingOutput, folder }) => {
         if (folder.hidden) {
           should(matchingOutput.properties && matchingOutput.properties.hidden).be.true(`${folder.name} should be hidden`)
         } else {
-          should(!!matchingOutput.properties && matchingOutput.properties.hidden).not.be.true();
+          should(matchingOutput.properties && matchingOutput.properties.hidden).not.be.true();
         }
       })
   })

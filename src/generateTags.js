@@ -12,7 +12,7 @@ const generateTags = (content, outputFolder, deps) => {
       .filter(file => file.type === consts.fileType.md)
   let tags = getTags(mdFiles);
   deps.fs.mkdirSync(deps.path.join(outputFolder, "tags"));
-  const template = deps.getTemplate({})
+  const template = deps.getTemplate({ properties: { template: "index" } })
   tags = tags.map(tagname => ({
     tag: tagname,
     title: tagname,
@@ -33,11 +33,13 @@ const generateTags = (content, outputFolder, deps) => {
   const formattedTags = tags.map(tag => `<li class="item-md"><a href="${tag.tag}.html">${tag.title} (${tag.files.length})</a></li>`).join("\n");
   const tagIndex = {
     title: "Tags",
+    properties: { template: "tags" },
     content: `<ul class="post-list">${formattedTags}</ul>`,
     type: "tags",
     files: tags
   }
-  const renderedTags = template(tagIndex)
+  const indexTemplate = deps.getTemplate(tagIndex)
+  const renderedTags = indexTemplate(tagIndex)
   deps.fs.writeFileSync(deps.path.join(outputFolder, "tags", "index.html"), renderedTags)
 };
 

@@ -79,7 +79,7 @@ By default it's using your file names as title. You can override that with the h
 
 **Customize templates per file**
 
-If you Add a `template` property to your markdown headers, and set the value to the path of the file you want to use as a template.
+If you add a `template` property to your markdown headers, and set the value to the path of the file you want to use as a template.
 
 **Create a template library**
 
@@ -94,6 +94,8 @@ template: blog-post
 
 You can point to another template library by using the `--templates` (or `-T`) option.
 
+Plaf uses `default.handlebars` by default, and `index.handlebars` for indexes, and `tags.handlebars` for tags index.
+
 **Create your custom index**
 
 If you don't want to use a list of the markdown files in the directory but use your own index instead, create an `index.md` or a `index.html` file in the directory, and plaf will use that instead.
@@ -106,6 +108,6 @@ If you use tags in your md files, then plaf will use them and generate a tags in
 
 If you create a `.plaf/resources` directory, plaf will copy everything from it to the render directory, and will not index it. This is useful if you want to include things like fonts or CSS.
 
-**Hide folders**
+**Configure sub folders**
 
-Add a `.hide` file in a folder and it won't appear in the index of its parent folder..
+Add a `.plaf` file in a folder. Give it properties the same way you would a file. This way, you can specify a custom template for a given index.
