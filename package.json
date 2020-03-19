@@ -34,6 +34,7 @@
   "dependencies": {
     "command-line-usage": "^6.1.0",
     "handlebars": "^4.7.3",
+    "lunr": "^2.3.8",
     "marked": "^0.8.0",
     "yaclip": "^1.1.1",
     "yaml-js": "^0.2.3"
