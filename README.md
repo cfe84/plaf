@@ -111,3 +111,48 @@ If you create a `.plaf/resources` directory, plaf will copy everything from it t
 **Configure sub folders**
 
 Add a `.plaf` file in a folder. Give it properties the same way you would a file. This way, you can specify a custom template for a given index.
+
+**Build a search index**
+
+Plaf uses [Lunr](https://lunrjs.com/guides/getting_started.html) to build a search catalog. If you use `--generate-search` it will build two files:
+- `/search/catalog.js` which contains the search catalog as json (in `const catalog=`).
+- `/search/search.js` which contains the search libs.
+
+These can be used by adding a `search.md` file in a `search` directory in your folder using these. For example:
+
+```
+---
+title: search
+---
+
+<div class="search-bar" id="loading">Loading search catalog...</div>
+
+<script src="catalog.js"></script>
+<script src="search.js"></script>
+<script>
+  function s(evt) {
+    const searchResultsComponent = document.getElementById("search-results")
+    const res = search(evt.value)
+    searchResultsComponent.innerHTML = "";
+    res
+      .map(result => {
+        const elt = document.createElement("li");
+        elt.innerHTML = `<a href="/${result.relativePath.replace(/\.md$/, ".html")}">${result.title}</a>`
+        return elt;
+      })
+      .forEach(elt => searchResultsComponent.appendChild(elt));
+  }
+  loading = document.getElementById("loading").remove();
+</script>
+
+<input type="text" class="search-bar" id="search-bar" onkeyup="s(this)">
+<div>
+    <ul id="search-results" class="post-list"></ul>
+</div>
+
+<script>
+  document.getElementById("search-bar").focus()
+</script>
+```
+
+Folders and files can be skipped from indexing by adding a `noSearch` property in their config files or front matter.
