@@ -16,10 +16,10 @@ const processMd = (content, deps) => {
   }
 
   const replaceFootNotes = (content) => {
-    const notesRegex = /(?:\s|^)\[\^(\d+)\]\s*:/g
-    const referenceRegex = /(\S)\[\^(\d+)\]/g
+    const notesRegex = /(\s|^)\[\^(\d+)\]\s*:/g
+    const referenceRegex = /(\S|\])\[\^(\d+)\]/gm
     return content
-      .replace(notesRegex, ` <a name="note-$1" href="#ref-$1">[$1]</a>: `)
+      .replace(notesRegex, `$1<a name="note-$2" href="#ref-$2">[$2]</a>: `)
       .replace(referenceRegex, `$1<sup><a name="ref-$2" href="#note-$2">[$2]</a></sup>`)
   }
 
