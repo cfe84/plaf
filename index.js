@@ -13,6 +13,7 @@ const copyFiles = require("./src/copyFiles");
 const renderMd = require("./src/renderMd");
 const generateIndex = require("./src/generateIndex")
 const generateTags = require("./src/generateTags")
+const saveCatalog = require("./src/saveCatalog")
 const generateSearch = require("./src/generateSearch")
 const usage = require("command-line-usage")
 
@@ -86,5 +87,7 @@ renderMd(folderContent, outputFolder, deps)
 generateIndex(folderContent, outputFolder, deps)
 generateTags(folderContent, outputFolder, deps)
 if (search) {
-  generateSearch(folderContent, outputFolder, deps)
+  fs.mkdirSync(path.join(outputFolder, "search"), { recursive: true })
+  saveCatalog(folderContent, outputFolder, deps)
+  generateSearch(outputFolder, deps)
 }
