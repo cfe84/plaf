@@ -3,70 +3,289 @@
 <head>
   <title>{{title}}</title>
   <style>
+    p {
+      margin-bottom: 19px;
+      margin-top: 19px;
+      line-height: 145%;
+    }
+
     body {
-      font-size: 1.2em;
-      font-family: Helvetica, Arial, sans-serif;
-      max-width: 600px;
+      font-size: 14pt;
+      font-family: Palatino, Georgia, "Times New Roman", serif;
+      text-align: justify;
+      counter-reset: h1;
+    }
+
+    .wrapper {
+      max-width: 660px;
+      margin-right: auto;
+      margin-left: auto;
+      padding-right: 10px;
+      padding-left: 10px;
+    }
+
+    main {
+      padding-bottom: 200px;
+    }
+
+    @media(max-width: 600px) {
+      main {
+        padding-bottom: 0px;
+      }
+    }
+
+    .site-header {
+      padding-top: 20px;
+      position: relative;
+      text-align: center;
+    }
+
+    .site-header a,
+    .site-header a:visited {
+      color: #d8d8d8;
+    }
+
+    .site-header--menu {
+      color: #d8d8d8
+    }
+
+    .site-header--title {
+      font-size: 220%;
+      padding-top: 220px;
+      padding-bottom: 25px;
+      text-transform: capitalize;
+    }
+
+    @media(max-width: 600px) {
+      .site-header--title {
+        padding-top: 25px;
+      }
+
+      .site-header--menu,
+      .site-header a,
+      .site-header a:visited {
+        color: #aaa;
+      }
+    }
+
+    h1::before {
+      counter-increment: h1;
+      content: counter(h1) " ";
+      margin-right: 15px;
+    }
+
+    h1 {
+      font-size: 160%;
+      counter-reset: h2;
+      text-transform: capitalize;
+      padding-top: 24px;
+      padding-bottom: 5px;
+    }
+
+    h2::before {
+      counter-increment: h2;
+      content: counter(h1) "."counter(h2) " ";
+      margin-right: 10px;
+    }
+
+    h2 {
+      text-transform: capitalize;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
       margin: auto;
     }
 
-    header {
-      text-align: center
+    /** Figures */
+    figure>img {
+      display: block;
     }
 
-    .site-title {
-      font-size: 3em;
+    figcaption {
+      font-size: 75%;
+    }
+
+    /** Lists */
+    ul,
+    ol {
+      margin-left: 20px;
+    }
+
+    li {
+      list-style-type: "\2013   ";
+      line-height: 145%;
+      margin-bottom: 15px;
+    }
+
+    li:first-child {
       margin-top: 15px;
-      margin-bottom: 15px;
     }
 
-    p {
-      margin-bottom: 15px;
+    @media(max-width: 600px) {
+
+      ul,
+      ol {
+        margin-left: 0px;
+
+      }
     }
 
-    .post-list {
-      padding: 0;
-      display: block;
-      width: 100%
+    td {
+      padding: 5pt;
     }
 
-    .post-list li {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      padding-top: 20px;
-      padding-bottom: 20px;
-      list-style: none;
-      font-size: 2em;
+    /** Links */
+    a,
+    a:visited {
+      color: #000;
+      text-decoration: none;
+      border-bottom: .5pt solid #d8d8d8;
     }
 
-    .post-list li:hover {
-      background-color: #ddd;
+    a:hover,
+    a:visited:hover {
+      border-bottom-color: #111;
+      color: #000;
+    }
+
+    /** Blockquotes */
+    blockquote {
+      color: #424242;
+      border-left: 4px solid #888;
+      padding-left: 15px;
+      font-style: italic;
+      background: #f5f5f5;
+    }
+
+
+    @media(max-width: 600px) {
+      blockquote {
+        padding-left: 0px;
+        margin-left: 0;
+        margin-right: 0;
+        padding-right: 0;
+      }
+    }
+
+    blockquote> :last-child {
+      margin-bottom: 0;
+    }
+
+    pre {
+      padding: 8px 12px;
+      overflow-x: auto;
+    }
+
+    pre>code {
+      border: 0;
+      padding-right: 0;
+      padding-left: 0;
+    }
+
+
+
+    /** Icons */
+    .icon>svg {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .icon>svg path {
+      fill: #828282;
     }
 
     .item-folder {
-      background-color: #eee;
-      font-weight: 600;
+      font-weight: 800;
     }
 
-    .post-list a {
+    .post-list {
+      margin-left: 0;
+      padding-left: 0;
+      text-align: left;
+      text-transform: capitalize;
+    }
+
+    .post-list>li {
+      width: 100%;
+      display: table;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1pt solid #e8e8e8;
+      font-size: 180%;
+      line-height: 1;
+    }
+
+    .post-list>li>a {
+      display: table-cell;
       text-decoration: none;
-      color: inherit
+      color: #111;
+      vertical-align: middle;
+      padding-left: 10pt;
+      border-bottom: none;
     }
 
-    .item-folder {}
+    .post-list>li:hover {
+      background-color: #ddd;
+      cursor: pointer;
+    }
+
+    .tag-link {
+      display: inline-block;
+      margin: 5px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      padding-left: 10px;
+      padding-right: 10px;
+      border: 1pt solid #eee;
+      border-radius: 5px;
+    }
+
+    .tag-link:hover {
+      border: 1pt solid black;
+    }
+
+    .search-bar {
+      font-size: 2em;
+      text-align: center;
+      width: 100%;
+      border: 0;
+      border-bottom: 1pt solid #eee;
+      font-family: "cmu_serifbold", Palatino, Georgia, "Times New Roman", serif;
+    }
+
+    code.language-graph {
+      margin: auto;
+      display: block;
+    }
+
+    sup {
+      line-height: 0;
+    }
   </style>
 </head>
 
 <body>
-  <header>
-    <a href="/index.html">Back to root</a> | <a href="./index.html">Back to folder</a> | <a href="../index.html">Back
-      one level</a>
-    <div class="site-title">
-      {{title}}
-    </div>
-  </header>
-  <div>{{{content}}}</div>
+
+  <div class="wrapper">
+    <header class="site-header" role="banner">
+      <div class="site-header--menu">
+        <a href="/index.html">Root</a> |
+        <a href="/tags/">Tags</a> |
+        <a href="/search/">Search</a> |
+        <a href="./index.html">&leftarrow;
+          folder</a> | <a href="../index.html">&uparrow;
+          one level</a></div>
+      <p class="site-header--title">
+        {{#if (eq type "tag")}}#{{/if}}{{title}}
+      </p>
+    </header>
+    <main aria-label="Content">
+      {{{content}}}
+    </main>
+  </div>
+
 </body>
 
 </html>
