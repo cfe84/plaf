@@ -1,6 +1,6 @@
 {
   "name": "plaf",
-  "version": "1.16.0",
+  "version": "1.17.0",
   "description": "Run plaf in a directory with markdown files, and PLAF you have a static website",
   "main": "index.js",
   "scripts": {
