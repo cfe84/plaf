@@ -4,6 +4,35 @@ const templateFactory = (defaultTemplateName, templateFolder, deps) => {
 
   const DEFAULT_TEMPLATE = deps.path.join(__dirname, "default.handlebars");
 
+  const helpersFolder = deps.path.join(templateFolder, "helpers");
+
+  const loadHelper = (file) => {
+    const content = `${deps.fs.readFileSync(file)}`
+    return eval(content);
+  }
+
+  const loadHelpers = (folder) => {
+    let helpers = [
+      { name: "eq", helper: (a, b) => a === b },
+      { name: "ge", helper: (a, b) => a >= b },
+      { name: "gt", helper: (a, b) => a > b },
+      { name: "le", helper: (a, b) => a <= b },
+      { name: "lt", helper: (a, b) => a < b },
+      { name: "ne", helper: (a, b) => a !== b }
+    ]
+    if (deps.fs.existsSync(folder)) {
+      const helpersFiles = deps.fs.readdirSync(folder);
+      helpers = helpers.concat(helpersFiles
+        .filter(file => file.endsWith(".js"))
+        .map(file => ({
+          name: file.substring(0, file.length - 3),
+          helper: loadHelper(deps.path.join(folder, file))
+        })))
+    }
+    return helpers
+  }
+  const helpers = loadHelpers(helpersFolder)
+
   if (!defaultTemplateName) {
     const defaultInTemplateDirectory = deps.path.join(templateFolder, "default.handlebars")
     if (templateFolder && deps.fs.existsSync(defaultInTemplateDirectory)) {
@@ -48,12 +77,8 @@ const templateFactory = (defaultTemplateName, templateFolder, deps) => {
     if (!templateFile) {
       templateFile = defaultTemplate
     }
-    handlebars.registerHelper("eq", (a, b) => a === b)
-    handlebars.registerHelper("ge", (a, b) => a >= b)
-    handlebars.registerHelper("gt", (a, b) => a > b)
-    handlebars.registerHelper("le", (a, b) => a <= b)
-    handlebars.registerHelper("lt", (a, b) => a < b)
-    handlebars.registerHelper("ne", (a, b) => a !== b)
+
+    helpers.forEach(helper => handlebars.registerHelper(helper.name, helper.helper))
     const template = handlebars.compile(templateFile)
     return (props) => template(copyAndFlattenObject(props))
   }

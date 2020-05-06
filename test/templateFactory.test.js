@@ -5,7 +5,7 @@ const fakePath = require("./fakePath");
 
 describe("template factory", () => {
   // given
-  const fakeFs = td.object(["existsSync", "readFileSync"]);
+  const fakeFs = td.object(["existsSync", "readFileSync", "readdirSync"]);
   const customTemplatePath = fakePath.join("templates", "custom.handlebars");
   const fullPathTemplatePath = fakePath.join("somewhere", "other-custom.handlebars");
   const customDefaultTemplatePath = fakePath.join("some.handlebars");
@@ -25,13 +25,20 @@ describe("template factory", () => {
   td.when(fakeFs.readFileSync(allPropertiesTemplatePath)).thenReturn("{{{prop1}}}-{{{prop2}}}")
   td.when(fakeFs.existsSync(unexistingTemplate)).thenReturn(false);
 
+  const helperFolder = fakePath.join("templates", "helpers")
+  const helperFile = fakePath.join(helperFolder, "customHelper.js");
+  const templateWithHelperFile = fakePath.join("templates", "helper.handlebars")
+  td.when(fakeFs.existsSync(helperFolder)).thenReturn(true);
+  td.when(fakeFs.readdirSync(helperFolder)).thenReturn(["customHelper.js"]);
+  td.when(fakeFs.readFileSync(helperFile)).thenReturn("(input) => `--${input}--`")
+  td.when(fakeFs.existsSync(templateWithHelperFile)).thenReturn(true)
+  td.when(fakeFs.readFileSync(templateWithHelperFile)).thenReturn("=={{{customHelper 123}}}==")
+
   deps = {
     fs: fakeFs,
     path: fakePath
   }
   // when
-
-
 
   // then
   const getTemplate = templateFactory(undefined, "templates", deps)
@@ -58,4 +65,7 @@ describe("template factory", () => {
 
   const unexistingResult = getTemplate({ template: "blerh" })({})
   it("returns default if specified doesn't exist", () => should(unexistingResult).equal('default'));
+
+  const templateWithHelper = getTemplate({ template: "helper" })({})
+  it("loads and uses custom helpers", () => should(templateWithHelper).eql("==--123--=="))
 });

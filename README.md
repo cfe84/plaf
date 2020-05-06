@@ -156,3 +156,15 @@ title: search
 ```
 
 Folders and files can be skipped from indexing by adding a `noSearch` property in their config files or front matter.
+
+**Use helpers**
+
+plaf uses handlebars for generation. It comes with the following helpers: `ne`, `eq`, `ge`, `lt`, `le`, `gt`. This means that you can use the following syntax in your template:
+
+```handlebars
+{{#if eq someproperty "true"}}
+<script>somescript</script>
+{{}}
+```
+
+You can add you custom helpers in the `.plaf/helpers` folder at the root of the directory you're processing. Plaf will use the file name, minus the `js` extension, as the helper name. The helper content must be a javascript function.
