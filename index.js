@@ -83,17 +83,27 @@ const context = {
   deps,
   name
 }
-context.folderContent = crawl(context);
-preprocess(context);
-processMd(context);
-cleanup(context);
-buildDirectoryStructure(context);
-copyFiles(context);
-renderMd(context)
-generateIndex(context)
-generateTags(context)
+
+const pipeline = [
+  { order: 100, step: (context) => context.folderContent = crawl(context) },
+  { order: 200, step: preprocess },
+  { order: 300, step: processMd },
+  { order: 400, step: cleanup },
+  { order: 500, step: buildDirectoryStructure },
+  { order: 600, step: copyFiles },
+  { order: 700, step: renderMd },
+  { order: 800, step: generateIndex },
+  { order: 900, step: generateTags },
+]
+
 if (search) {
-  fs.mkdirSync(path.join(outputFolder, "search"), { recursive: true })
-  saveCatalog(context)
-  generateSearch(context)
+  pipeline.push(
+    { order: 1000, step: (context) => fs.mkdirSync(path.join(context.outputFolder, "search"), { recursive: true }) },
+    { order: 1100, step: saveCatalog },
+    { order: 1200, step: generateSearch },
+  )
 }
+
+pipeline
+  .sort((a, b) => a - b)
+  .forEach(step => step.step(context))
