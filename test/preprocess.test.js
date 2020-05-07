@@ -45,7 +45,9 @@ describe("preprocess", () => {
 
     should(rootfolder.title).eql("new root title");
     should(mdFile.title).eql("markdown");
+    should(mdFile.outputFilename).eql("markdown.html");
     should(txtFile.title).eql("text.txt");
+    should(txtFile.outputFilename).eql("text.txt");
     should(folder.title).eql("subfolder");
   });
 });

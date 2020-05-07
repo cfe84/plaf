@@ -5,12 +5,14 @@ const preprocess = ({ folderContent, name }) => {
     switch (item.type) {
       case consts.fileType.md:
         item.title = item.filename.replace(/\.md$/i, "");
+        item.outputFilename = item.filename.replace(/\.md$/i, ".html");
         break;
 
       case consts.fileType.file:
       case consts.fileType.folder:
       default:
         item.title = item.filename;
+        item.outputFilename = item.filename;
         break;
     }
   })
