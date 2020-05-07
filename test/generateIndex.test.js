@@ -71,7 +71,7 @@ describe("generate index", () => {
     relativePath: '',
     files: [folder, folder2, skippedIndexingfolder, hiddenfolder]
   };
-  const crawled = [
+  const folderContent = [
     rootfolder,
     mdFile,
     mdFileCustomLayout,
@@ -82,9 +82,9 @@ describe("generate index", () => {
   ];
 
   const fakeGetTemplate = (props1) => (props2) => `${(props1.properties ? props1.properties.template : "") || "default"}: # ${props2.title} - ${props2.content}`
-  const outputDirectory = "out-123"
+  const outputFolder = "out-123"
   const fakeFs = td.object(["writeFileSync", "existsSync"]);
-  td.when(fakeFs.existsSync(fakePath.join(outputDirectory, "subfolder2", "index.html"))).thenReturn(true)
+  td.when(fakeFs.existsSync(fakePath.join(outputFolder, "subfolder2", "index.html"))).thenReturn(true)
   deps = {
     path: fakePath,
     fs: fakeFs,
@@ -92,41 +92,41 @@ describe("generate index", () => {
   }
 
   // when
-  generateIndex(crawled, outputDirectory, deps)
+  generateIndex({ folderContent, outputFolder, deps })
 
   it("passes the template", () => {
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "index.html"),
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "index.html"),
       td.matchers.argThat(content => content.startsWith("index: # root - "))));
   });
   // then
   it("renders folders in root", () => {
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "index.html"),
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "index.html"),
       td.matchers.argThat(content => content.startsWith("index: # root - ") &&
         content.indexOf("subfolder") > 0 &&
         content.indexOf("subfolder3") > 0
       )));
   })
   it("skips hidden folder in root", () => {
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "index.html"),
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "index.html"),
       td.matchers.argThat(content => content.startsWith("index: # root - ") &&
         content.indexOf("hiddenSubfolder") < 0
       )));
   })
   it("does not render content from subfolders in root", () => {
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "index.html"),
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "index.html"),
       td.matchers.argThat(content => content.startsWith("index: # root - ") &&
         content.indexOf("mdFile.html") < 0 &&
         content.indexOf("title-1") < 0
       )));
   })
   it("does not render root folder within root folder itself", () => {
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "index.html"),
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "index.html"),
       td.matchers.argThat(content => content.startsWith("index: # root - ") &&
         content.indexOf(">root<") < 0
       )));
   })
   it("renders indexes in subfolders", () => {
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "subfolder", "index.html"),
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "subfolder", "index.html"),
       td.matchers.argThat(content => content.startsWith("index: # subfolder - ") &&
         content.indexOf("mdFile.html") > 0 &&
         content.indexOf("mdFileCustom.html") > 0 &&
@@ -136,14 +136,14 @@ describe("generate index", () => {
       )));
   });
   it("doesn't override custom indexes", () => {
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "subfolder2", "index.html"), td.matchers.anything()),
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "subfolder2", "index.html"), td.matchers.anything()),
       { times: 0 });
   })
   it("doesn't index skipped folders", () => {
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "subfolder3", "index.html"), td.matchers.anything()),
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "subfolder3", "index.html"), td.matchers.anything()),
       { times: 0 });
   })
   it("indexes hidden folders", () => {
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "hiddenSubfolder", "index.html"), td.matchers.anything()));
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "hiddenSubfolder", "index.html"), td.matchers.anything()));
   })
 });

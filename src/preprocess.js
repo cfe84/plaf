@@ -1,7 +1,7 @@
 const consts = require("./consts")
 
-const preprocess = (content, name) => {
-  content.forEach(item => {
+const preprocess = ({ folderContent, name }) => {
+  folderContent.forEach(item => {
     switch (item.type) {
       case consts.fileType.md:
         item.title = item.filename.replace(/\.md$/i, "");
@@ -15,7 +15,7 @@ const preprocess = (content, name) => {
     }
   })
 
-  const root = content.find(element => element.relativePath === "")
+  const root = folderContent.find(element => element.relativePath === "")
   if (root && name) {
     root.title = name;
   }

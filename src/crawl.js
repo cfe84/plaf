@@ -12,7 +12,7 @@ function createFolderObject(file, filePath, relativePath, files, properties) {
   };
 }
 
-const crawl = (inputFolder, outputFolder, deps) => {
+const crawl = ({ inputFolder, outputFolder, deps }) => {
 
   function isIgnored(file) {
     return file[0] === "."

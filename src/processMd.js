@@ -1,7 +1,7 @@
 const consts = require("../src/consts");
 const yaml = require("yaml-js")
 
-const processMd = (content, deps) => {
+const processMd = ({ folderContent, deps }) => {
   const tagRegex = /(^| )#([a-zA-Z0-9-_]+)/gm
 
   const fixMdLinks = (content) => {
@@ -68,7 +68,7 @@ const processMd = (content, deps) => {
     file.properties = properties;
   }
 
-  content
+  folderContent
     .filter(file => file.type === consts.fileType.md)
     .forEach(file => renderMd(file))
 }

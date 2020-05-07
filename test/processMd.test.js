@@ -35,7 +35,7 @@ describe("process markdown", () => {
       title: 'subfolder',
       files: [mdFile, txtFile]
     };
-    const crawled = [
+    const folderContent = [
       mdFile,
       txtFile,
       folder
@@ -52,7 +52,7 @@ describe("process markdown", () => {
     }
 
     // when
-    processMd(crawled, deps);
+    processMd({ folderContent, deps });
 
     // then
     should(mdFile.title).eql("This is title");
@@ -81,7 +81,7 @@ describe("process markdown", () => {
       title: 'subfolder',
       content: [mdFile]
     };
-    const crawled = [
+    const folderContent = [
       mdFile,
       folder
     ];
@@ -97,7 +97,7 @@ describe("process markdown", () => {
     }
 
     // when
-    processMd(crawled, deps);
+    processMd({ folderContent, deps });
 
     // then
     td.verify(fakeMarked.marked(content));
@@ -122,7 +122,7 @@ describe("process markdown", () => {
       title: 'subfolder',
       content: [mdFile]
     };
-    const crawled = [
+    const folderContent = [
       mdFile,
       folder
     ];
@@ -138,7 +138,7 @@ describe("process markdown", () => {
     }
 
     // when
-    processMd(crawled, deps);
+    processMd({ folderContent, deps });
 
     // then
     should(mdFile.properties.tags).deepEqual(["toug", "tag", "another"]);

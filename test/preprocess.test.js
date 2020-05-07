@@ -39,7 +39,7 @@ describe("preprocess", () => {
     ];
 
     // when
-    preprocess(crawled, "new root title");
+    preprocess({ folderContent: crawled, name: "new root title" });
 
     // then
 

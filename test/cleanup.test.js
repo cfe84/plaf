@@ -36,7 +36,7 @@ describe("cleanup", () => {
     }
 
     // when
-    cleanup("start/folder", deps)
+    cleanup({ outputFolder: "start/folder", deps })
 
     //then
     td.verify(fakeFs.unlinkSync("start/file.txt"), { times: 0 })
@@ -62,7 +62,7 @@ describe("cleanup", () => {
     }
 
     // when
-    cleanup("folder", deps)
+    cleanup({ outputFolder: "folder", deps })
 
     //then
     td.verify(fakeFs.rmdirSync("folder"), { times: 0 })

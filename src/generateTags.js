@@ -1,5 +1,5 @@
 const consts = require("./consts");
-const generateTags = (content, outputFolder, deps) => {
+const generateTags = ({ folderContent, outputFolder, deps }) => {
   const getTags = (content) =>
     content
       .filter(file => !!file.properties.tags)
@@ -8,7 +8,7 @@ const generateTags = (content, outputFolder, deps) => {
       .filter((item, pos, self) => self.indexOf(item) === pos)
       .sort()
   const mdFiles =
-    content
+    folderContent
       .filter(file => file.type === consts.fileType.md)
   let tags = getTags(mdFiles);
   deps.fs.mkdirSync(deps.path.join(outputFolder, "tags"));

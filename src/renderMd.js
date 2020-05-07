@@ -1,7 +1,7 @@
 const consts = require("./consts");
 
-const renderMd = (content, outputFolder, deps) => {
-  content
+const renderMd = ({ folderContent, outputFolder, deps }) => {
+  folderContent
     .filter(file => file.type === consts.fileType.md)
     .forEach(mdFile => {
       const template = deps.getTemplate(mdFile.properties);

@@ -20,7 +20,7 @@ describe("generate search", () => {
     }
 
     // when
-    generateSearch("output", deps)
+    generateSearch({ outputFolder: "output", deps })
 
     // then
     td.verify(fakeFs.writeFileSync("out", td.matchers.argThat(content =>

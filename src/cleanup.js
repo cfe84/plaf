@@ -1,4 +1,4 @@
-const cleanup = (outputFolder, deps) => {
+const cleanup = ({ outputFolder, deps }) => {
   const rmFolder = (folder) => {
     if (!deps.fs.existsSync(folder)) {
       return;

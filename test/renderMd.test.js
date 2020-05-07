@@ -28,7 +28,7 @@ describe("renderMd", () => {
     relativePath: 'subfolder',
     files: [mdFile, mdFileCustomLayout]
   };
-  const crawled = [
+  const folderContent = [
     mdFile,
     mdFileCustomLayout,
     folder
@@ -41,15 +41,15 @@ describe("renderMd", () => {
     fs: fakeFs,
     getTemplate: fakeGetTemplate
   }
-  const outputDirectory = "out-123"
+  const outputFolder = "out-123"
 
   // when
-  renderMd(crawled, outputDirectory, deps)
+  renderMd({ folderContent, outputFolder, deps })
 
   // then
   it("renders markdown files in templates", () => {
     td.verify(fakeFs.writeFileSync(td.matchers.anything(), td.matchers.anything()), { times: 2 });
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "markdown1.html"), "default: # The title - the content"));
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "markdown2.html"), "something: # The title - the other content"));
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "markdown1.html"), "default: # The title - the content"));
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "markdown2.html"), "something: # The title - the other content"));
   })
 });

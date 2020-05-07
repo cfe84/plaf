@@ -25,7 +25,7 @@ describe("copyFiles", () => {
       relativePath: 'subfolder',
       files: [mdFile, txtFile]
     };
-    const crawled = [
+    const folderContent = [
       mdFile,
       txtFile,
       folder
@@ -36,13 +36,13 @@ describe("copyFiles", () => {
       path: fakePath,
       fs: fakeFs
     }
-    const outputDirectory = "out-123"
+    const outputFolder = "out-123"
 
     // when
-    copyFiles(crawled, outputDirectory, deps)
+    copyFiles({ folderContent, outputFolder, deps })
 
     // then
-    td.verify(fakeFs.copyFileSync(txtFile.path, fakePath.join(outputDirectory, txtFile.relativePath)));
-    td.verify(fakeFs.copyFileSync(mdFile.path, fakePath.join(outputDirectory, mdFile.relativePath)), { times: 0 })
+    td.verify(fakeFs.copyFileSync(txtFile.path, fakePath.join(outputFolder, txtFile.relativePath)));
+    td.verify(fakeFs.copyFileSync(mdFile.path, fakePath.join(outputFolder, mdFile.relativePath)), { times: 0 })
   })
 });

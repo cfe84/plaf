@@ -26,7 +26,7 @@ describe("buildDirectoryStructure", () => {
       relativePath: 'subfolder',
       files: [file1]
     };
-    const crawled = [
+    const folderContent = [
       rootFolder,
       folder1,
       file1,
@@ -39,7 +39,7 @@ describe("buildDirectoryStructure", () => {
     }
 
     // exec
-    buildDirectoryStructure("rendered", crawled, deps);
+    buildDirectoryStructure({ outputFolder: "rendered", folderContent, deps });
 
     // assess
     td.verify(fakeFs.mkdirSync("rendered/"), { times: 1 });

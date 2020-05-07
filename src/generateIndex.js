@@ -1,5 +1,5 @@
 const consts = require("./consts");
-const generateIndex = (content, outputFolder, deps) => {
+const generateIndex = ({ folderContent, outputFolder, deps }) => {
 
   const generateIndexForFolder = ({ folder, targetFile }) => {
     const list = folder.files
@@ -19,7 +19,7 @@ const generateIndex = (content, outputFolder, deps) => {
     deps.fs.writeFileSync(targetFile, indexContent)
   }
 
-  content
+  folderContent
     .map(folder => ({
       folder,
       targetFile: deps.path.join(outputFolder, folder.relativePath, "index.html")

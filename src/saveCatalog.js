@@ -1,12 +1,12 @@
 const consts = require("./consts")
 
-const saveCatalog = (content, outputFolder, deps) => {
-  const skippedFolders = content
+const saveCatalog = ({ folderContent, outputFolder, deps }) => {
+  const skippedFolders = folderContent
     .filter(folder => folder.type === consts.fileType.folder && (folder.noSearch || (folder.properties && folder.properties.noSearch)))
     .map(folder => folder.relativePath)
   const isNotSkipped = entry => !(entry.noSearch || (entry.properties && entry.properties.noSearch))
   const isNotInSkippedFolder = entry => !(skippedFolders.find(skippedFolder => entry.relativePath.startsWith(skippedFolder)));
-  const serializedContent = JSON.stringify(content
+  const serializedContent = JSON.stringify(folderContent
     .filter(entry => entry.type === consts.fileType.md)
     .filter(isNotSkipped)
     .filter(isNotInSkippedFolder)

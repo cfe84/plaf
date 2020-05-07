@@ -19,7 +19,7 @@ describe("generate tags", () => {
     title: "title-2",
     properties: { title: 'title-2', tags: ['tag-2', 'tag-3'] }
   };
-  const crawled = [
+  const folderContent = [
     mdFile1,
     mdFile2,
   ];
@@ -31,15 +31,15 @@ describe("generate tags", () => {
     fs: fakeFs,
     getTemplate: fakeGetTemplate
   }
-  const outputDirectory = "out-123"
+  const outputFolder = "out-123"
 
   // when
-  generateTags(crawled, outputDirectory, deps)
+  generateTags({ folderContent, outputFolder, deps })
 
   // then
-  it("creates tags folder", () => { td.verify(fakeFs.mkdirSync(fakePath.join(outputDirectory, "tags"))) })
+  it("creates tags folder", () => { td.verify(fakeFs.mkdirSync(fakePath.join(outputFolder, "tags"))) })
   it("generates tags files", () => {
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "tags", "tag-2.html"),
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "tags", "tag-2.html"),
       td.matchers.argThat(content => content.startsWith("index: # tag-2 - ") &&
         content.indexOf("mdFile-1.html") > 0 &&
         content.indexOf("title-1") > 0 &&
@@ -48,7 +48,7 @@ describe("generate tags", () => {
         content.indexOf("l2") > 0 &&
         content.indexOf("-tag-") > 0
       )));
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "tags", "tag-1.html"),
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "tags", "tag-1.html"),
       td.matchers.argThat(content => content.startsWith("index: # tag-1 - ") &&
         content.indexOf("mdFile-1.html") > 0 &&
         content.indexOf("title-1") > 0 &&
@@ -56,7 +56,7 @@ describe("generate tags", () => {
         content.indexOf("l1") > 0 &&
         content.indexOf("title-2") < 0
       )));
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "tags", "tag-3.html"),
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "tags", "tag-3.html"),
       td.matchers.argThat(content => content.startsWith("index: # tag-3 - ") &&
         content.indexOf("mdFile-1.html") < 0 &&
         content.indexOf("title-1") < 0 &&
@@ -66,7 +66,7 @@ describe("generate tags", () => {
       )));
   });
   it("generates tags index", () => {
-    td.verify(fakeFs.writeFileSync(fakePath.join(outputDirectory, "tags", "index.html"),
+    td.verify(fakeFs.writeFileSync(fakePath.join(outputFolder, "tags", "index.html"),
       td.matchers.argThat(content => content.startsWith("tags: # Tags - ") &&
         content.indexOf("tag-1.html") > 0 &&
         content.indexOf("tag-2.html") > 0 &&

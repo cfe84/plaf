@@ -77,17 +77,23 @@ if (command["generate-search"]) {
 const deps = { fs, path, handlebars, marked }
 deps.getTemplate = templateFactory(defaultTemplate, templateFolder, deps)
 
-let folderContent = crawl(inputFolder, outputFolder, deps);
-preprocess(folderContent, name);
-processMd(folderContent, deps);
-cleanup(outputFolder, deps);
-buildDirectoryStructure(outputFolder, folderContent, deps);
-copyFiles(folderContent, outputFolder, deps);
-renderMd(folderContent, outputFolder, deps)
-generateIndex(folderContent, outputFolder, deps)
-generateTags(folderContent, outputFolder, deps)
+const context = {
+  inputFolder,
+  outputFolder,
+  deps,
+  name
+}
+context.folderContent = crawl(context);
+preprocess(context);
+processMd(context);
+cleanup(context);
+buildDirectoryStructure(context);
+copyFiles(context);
+renderMd(context)
+generateIndex(context)
+generateTags(context)
 if (search) {
   fs.mkdirSync(path.join(outputFolder, "search"), { recursive: true })
-  saveCatalog(folderContent, outputFolder, deps)
-  generateSearch(outputFolder, deps)
+  saveCatalog(context)
+  generateSearch(context)
 }

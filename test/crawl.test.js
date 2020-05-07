@@ -30,7 +30,7 @@ describe("crawl", () => {
 
 
   // exec
-  const output = crawl("start", "dfsf", deps);
+  const output = crawl({ inputFolder: "start", outputFolder: "dfsf", deps });
 
   // assess
   const properties = Object.getOwnPropertyNames(folders);

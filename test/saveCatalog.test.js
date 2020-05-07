@@ -21,7 +21,11 @@ describe("save catalog", () => {
   }
 
   // when
-  saveCatalog([file1, file2, file3, file4, fileSkipped, skippedFolder, fileInSkippedFolder], "output", deps)
+  saveCatalog({
+    folderContent: [file1, file2, file3, file4, fileSkipped, skippedFolder, fileInSkippedFolder],
+    outputFolder: "output",
+    deps
+  })
 
   // then
   it("saves md in catalog, as path in HTML", () => { td.verify(fakeFs.writeFileSync(fakePath.join("output", "search", "catalog.js"), td.matchers.contains("path/file3.html"))); })

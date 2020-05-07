@@ -1,8 +1,7 @@
 const consts = require("./consts")
 
-const buildDirectoryStructure = (outputFolder, content, deps) => {
-  // deps.fs.mkdirSync(outputFolder)
-  content
+const buildDirectoryStructure = ({ outputFolder, folderContent, deps }) => {
+  folderContent
     .filter(item => item.type === consts.fileType.folder)
     .map(folder => folder.relativePath)
     .sort((a, b) => a.length < b.length)
