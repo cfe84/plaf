@@ -4,25 +4,6 @@ const yaml = require("yaml-js")
 const processMd = ({ folderContent, deps }) => {
   const tagRegex = /(^| )#([a-zA-Z0-9-_]+)/gm
 
-  const fixMdLinks = (content) => {
-    const regex = /.md(#\w+)?\)/g
-    return content.replace(regex, ".html$1)");
-  }
-
-  const replaceRefs = (content) => {
-    const referenceRegex = /\s*\((\[ref\]\([^)]+\))\)/g
-    return content
-      .replace(referenceRegex, `<sup>$1</sup>`)
-  }
-
-  const replaceFootNotes = (content) => {
-    const notesRegex = /(\s|^)\[\^(\d+)\]\s*:/g
-    const referenceRegex = /(\S|\])\[\^(\d+)\]/gm
-    return content
-      .replace(notesRegex, `$1<a name="note-$2" href="#ref-$2">[$2]</a>: `)
-      .replace(referenceRegex, `$1<sup><a name="ref-$2" href="#note-$2">[$2]</a></sup>`)
-  }
-
   const replaceTags = (content) => {
     return content.replace(tagRegex, `$1<a href="/tags/$2.html">#$2</a>`);
   }
@@ -38,7 +19,6 @@ const processMd = ({ folderContent, deps }) => {
     }
     const headerContent = content.substring(headerStartLineIndex + 4, headerFinishLineIndex).trim();
     const onlyContent = content.substring(headerFinishLineIndex + 4).trim();
-    const headerRegex = /^([^:]+)\s*:\s*(.*)/;
     const headers = yaml.load(headerContent)
     const res = {
       content: onlyContent,
@@ -56,7 +36,7 @@ const processMd = ({ folderContent, deps }) => {
     const path = file.path;
     const content = `${deps.fs.readFileSync(path)}`;
     const parsedContent = parseContent(content);
-    const rendered = deps.marked(fixMdLinks(replaceRefs(replaceTags(replaceFootNotes(parsedContent.content)))));
+    const rendered = replaceTags(parsedContent.content);
     const properties = parsedContent.headers || {};
     properties.tags = getTags(parsedContent.content);
     if (properties.title)

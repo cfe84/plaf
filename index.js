@@ -16,6 +16,8 @@ const generateTags = require("./src/generateTags")
 const saveCatalog = require("./src/saveCatalog")
 const generateSearch = require("./src/generateSearch")
 const usage = require("command-line-usage")
+const mdExtensions = require("./src/mdExtensions")
+const mdConvert = require("./src/mdConvert")
 
 const options = [
   { name: "help", alias: "h", type: Boolean, multiple: false, description: "Display this message" },
@@ -88,6 +90,8 @@ const pipeline = [
   { order: 100, step: (context) => context.folderContent = crawl(context) },
   { order: 200, step: preprocess },
   { order: 300, step: processMd },
+  { order: 320, step: mdExtensions },
+  { order: 340, step: mdConvert },
   { order: 400, step: cleanup },
   { order: 500, step: buildDirectoryStructure },
   { order: 600, step: copyFiles },
