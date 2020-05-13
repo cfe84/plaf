@@ -1,6 +1,17 @@
 const consts = require("../src/consts");
 
-const processMd = ({ folderContent, deps }) => {
+const processMd = ({ folderContent }) => {
+  const tagRegex = /(^| )#([a-zA-Z0-9-_]+)/gm
+
+  const replaceTags = (content) => {
+    return content.replace(tagRegex, `$1<a href="/tags/$2.html">#$2</a>`);
+  }
+
+  const getTags = (onlyContent) => {
+    const tagMatches = onlyContent.match(tagRegex);
+    const tags = tagMatches ? tagMatches.map(tag => tag.trim().substring(1)) : [];
+    return tags;
+  }
 
   const replaceRefs = (content) => {
     const referenceRegex = /\s*\((\[ref\]\([^)]+\))\)/g
@@ -29,7 +40,8 @@ const processMd = ({ folderContent, deps }) => {
   }
 
   const processMd = (file) => {
-    file.content = replaceArrows(replaceRefs(replaceFootNotes(file.content)));
+    file.properties.tags = getTags(file.content);
+    file.content = replaceTags(replaceArrows(replaceRefs(replaceFootNotes(file.content))));
   }
 
   folderContent

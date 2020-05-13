@@ -96,13 +96,21 @@ You can point to another template library by using the `--templates` (or `-T`) o
 
 Plaf uses `default.handlebars` by default, and `index.handlebars` for indexes, and `tags.handlebars` for tags index.
 
+**Use helpers in templates**
+
+plaf uses handlebars for generation. It comes with the following helpers: `ne`, `eq`, `ge`, `lt`, `le`, `gt`. This means that you can use the following syntax in your template:
+
+```handlebars
+{{#if eq someproperty "true"}}
+<script>somescript</script>
+{{}}
+```
+
+You can add you custom helpers in the `.plaf/helpers` folder at the root of the directory you're processing. Plaf will use the file name, minus the `js` extension, as the helper name. The helper content must be a javascript function.
+
 **Create your custom index**
 
 If you don't want to use a list of the markdown files in the directory but use your own index instead, create an `index.md` or a `index.html` file in the directory, and plaf will use that instead.
-
-**Use tags**
-
-If you use tags in your md files, then plaf will use them and generate a tags index.
 
 **Copy resource files**
 
@@ -112,7 +120,21 @@ If you create a `.plaf/resources` directory, plaf will copy everything from it t
 
 Add a `.plaf` file in a folder. Give it properties the same way you would a file. This way, you can specify a custom template for a given index.
 
-**Build a search index**
+**Use Markdown extensions**
+
+If you use #tags in your md files, then plaf will use them and generate a tags index.
+
+Plaf will also convert --> to &rarr; and ==> to &rArr; (and same for left).
+
+It also handle footnotes in this format[^1].
+
+[^1]: This is the footnote.
+
+It also handles references like this `([ref](some link))` and will make them appear as superscript<sup><a href="#">ref</a></sup>
+
+If you don't want plaf to mess with your markdown, use the `--no-markdown-extensions` (or `-M` for short) command.
+
+**Build a client-side search index (experimental)**
 
 Plaf uses [Lunr](https://lunrjs.com/guides/getting_started.html) to build a search catalog. If you use `--generate-search` it will build two files:
 - `/search/catalog.js` which contains the search catalog as json (in `const catalog=`).
@@ -156,15 +178,3 @@ title: search
 ```
 
 Folders and files can be skipped from indexing by adding a `noSearch` property in their config files or front matter.
-
-**Use helpers**
-
-plaf uses handlebars for generation. It comes with the following helpers: `ne`, `eq`, `ge`, `lt`, `le`, `gt`. This means that you can use the following syntax in your template:
-
-```handlebars
-{{#if eq someproperty "true"}}
-<script>somescript</script>
-{{}}
-```
-
-You can add you custom helpers in the `.plaf/helpers` folder at the root of the directory you're processing. Plaf will use the file name, minus the `js` extension, as the helper name. The helper content must be a javascript function.

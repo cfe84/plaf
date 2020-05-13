@@ -101,12 +101,12 @@ const pipeline = [
   { order: 600, step: copyFiles },
   { order: 700, step: renderMd },
   { order: 800, step: generateIndex },
-  { order: 900, step: generateTags },
 ]
 
 if (mdExtensionsActive) {
   pipeline.push(
     { order: 320, step: mdExtensions },
+    { order: 900, step: generateTags },
   )
 }
 
@@ -119,5 +119,5 @@ if (search) {
 }
 
 pipeline
-  .sort((a, b) => a - b)
+  .sort((a, b) => a.order - b.order)
   .forEach(step => step.step(context))

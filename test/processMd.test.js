@@ -143,6 +143,7 @@ describe("process markdown", () => {
 
     // when
     processMd({ folderContent, deps });
+    mdExtensions({ folderContent, deps })
 
     // then
     should(mdFile.properties.tags).deepEqual(["toug", "tag", "another"]);

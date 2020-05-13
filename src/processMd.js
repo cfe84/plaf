@@ -2,11 +2,7 @@ const consts = require("../src/consts");
 const yaml = require("yaml-js")
 
 const processMd = ({ folderContent, deps }) => {
-  const tagRegex = /(^| )#([a-zA-Z0-9-_]+)/gm
 
-  const replaceTags = (content) => {
-    return content.replace(tagRegex, `$1<a href="/tags/$2.html">#$2</a>`);
-  }
 
   const parseContent = (content) => {
     const headerStartLineIndex = content.indexOf("---\n");
@@ -26,19 +22,13 @@ const processMd = ({ folderContent, deps }) => {
     }
     return res;
   }
-  const getTags = (onlyContent) => {
-    const tagMatches = onlyContent.match(tagRegex);
-    const tags = tagMatches ? tagMatches.map(tag => tag.trim().substring(1)) : [];
-    return tags;
-  }
 
   const renderMd = (file) => {
     const path = file.path;
     const content = `${deps.fs.readFileSync(path)}`;
     const parsedContent = parseContent(content);
-    const rendered = replaceTags(parsedContent.content);
+    const rendered = parsedContent.content;
     const properties = parsedContent.headers || {};
-    properties.tags = getTags(parsedContent.content);
     if (properties.title)
       file.title = properties.title;
     else
