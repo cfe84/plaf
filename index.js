@@ -26,7 +26,8 @@ const options = [
   { name: "in", alias: "i", type: String, multiple: false, description: "Folder which will be crawled and rendered" },
   { name: "template", alias: "t", type: String, multiple: false, description: "Default template file" },
   { name: "template-folder", alias: "T", type: String, multiple: false, description: "Folder where templates will be looked for" },
-  { name: "generate-search", alias: "s", type: Boolean, multiple: false, description: "Generate a search index (experimental)" }
+  { name: "generate-search", alias: "s", type: Boolean, multiple: false, description: "Generate a search index (experimental)" },
+  { name: "no-md-extensions", alias: "M", type: Boolean, multiple: false, description: "Don't use the md extensions" }
 ]
 
 
@@ -49,6 +50,7 @@ let inputFolder = process.cwd();
 let outputFolder = "rendered";
 let defaultTemplate = null;
 let name = path.basename(inputFolder);
+let mdExtensionsActive = true;
 
 
 const command = parseCommandLine(options);
@@ -75,6 +77,9 @@ if (command.name) {
 if (command["generate-search"]) {
   search = true;
 }
+if (command["no-md-extensions"]) {
+  mdExtensionsActive = false;
+}
 
 const deps = { fs, path, handlebars, marked }
 deps.getTemplate = templateFactory(defaultTemplate, templateFolder, deps)
@@ -90,7 +95,6 @@ const pipeline = [
   { order: 100, step: (context) => context.folderContent = crawl(context) },
   { order: 200, step: preprocess },
   { order: 300, step: processMd },
-  { order: 320, step: mdExtensions },
   { order: 340, step: mdConvert },
   { order: 400, step: cleanup },
   { order: 500, step: buildDirectoryStructure },
@@ -99,6 +103,12 @@ const pipeline = [
   { order: 800, step: generateIndex },
   { order: 900, step: generateTags },
 ]
+
+if (mdExtensionsActive) {
+  pipeline.push(
+    { order: 320, step: mdExtensions },
+  )
+}
 
 if (search) {
   pipeline.push(
