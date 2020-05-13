@@ -171,7 +171,8 @@ describe("process markdown", () => {
       folder
     ];
 
-    const content = "#toug title: This is title\ncat: category\n---\n-content-\n This is the[^1] content[^2].\n\n# notes\n\n[^1]: Footnote 1\n\n- [^2]: Footnote 2";
+    const content = "#toug title: This is title\ncat: category\n---\n-content-\n This is the[^1] content[^2]. It has " +
+      "some refs ([ref](http://something.com)).\n\n# notes\n\n[^1]: Footnote 1\n\n- [^2]: Footnote 2";
     const fakeFs = td.object(["readFileSync"]);
     td.when(fakeFs.readFileSync(mdFile.path)).thenReturn(content);
     const fakeMarked = (content) => `-${content}-`
@@ -191,5 +192,6 @@ describe("process markdown", () => {
     should(mdFile.content).containEql(`content<sup><a name="ref-2" href="#note-2">[2]</a></sup>`);
     should(mdFile.content).containEql(`<a name="note-1" href="#ref-1">[1]</a>: Footnote 1`);
     should(mdFile.content).containEql(`<a name="note-2" href="#ref-2">[2]</a>: Footnote 2`);
+    should(mdFile.content).containEql(`some refs<sup>[ref](http://something.com)</sup>`);
   });
 });
