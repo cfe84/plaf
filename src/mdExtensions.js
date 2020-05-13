@@ -16,8 +16,20 @@ const processMd = ({ folderContent, deps }) => {
       .replace(referenceRegex, `$1<sup><a name="ref-$2" href="#note-$2">[$2]</a></sup>`)
   }
 
+  const replaceArrows = (content) => {
+    const rarrRegex = /-->/g
+    const larrRegex = /<--/g
+    const rArrRegex = /==>/g
+    const lArrRegex = /<==/g
+    return content
+      .replace(rarrRegex, "&rarr;")
+      .replace(larrRegex, "&larr;")
+      .replace(rArrRegex, "&rArr;")
+      .replace(lArrRegex, "&lArr;")
+  }
+
   const processMd = (file) => {
-    file.content = replaceRefs(replaceFootNotes(file.content));
+    file.content = replaceArrows(replaceRefs(replaceFootNotes(file.content)));
   }
 
   folderContent
