@@ -28,15 +28,23 @@ const processMd = ({ folderContent }) => {
   }
 
   const replaceArrows = (content) => {
-    const rarrRegex = /-->/g
-    const larrRegex = /<--/g
-    const rArrRegex = /==>/g
-    const lArrRegex = /<==/g
-    return content
-      .replace(rarrRegex, "&rarr;")
-      .replace(larrRegex, "&larr;")
-      .replace(rArrRegex, "&rArr;")
-      .replace(lArrRegex, "&lArr;")
+    const replacements = [
+      [/<->/g, "&harr;"],
+      [/-->/g, "&rarr;"],
+      [/<--/g, "&larr;"],
+      [/<=>/g, "&hArr;"],
+      [/==>/g, "&rArr;"],
+      [/<==/g, "&lArr;"],
+      [/---/g, "&mdash;"],
+      [/--/g, "&ndash;"],
+    ]
+
+    const pipeline =
+      replacements
+        .map(replacement => (input) => input.replace(replacement[0], replacement[1]))
+        .reduce((pipeline, step) => (input) => step(pipeline(input)))
+
+    return pipeline(content)
   }
 
   const processMd = (file) => {
