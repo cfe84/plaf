@@ -198,4 +198,53 @@ describe("process markdown", () => {
     should(mdFile.content).containEql(`Small &rarr; &harr; &larr; arrows and big &rArr; &hArr; &lArr; arrows`);
     should(mdFile.content).containEql(`En &ndash; and Em &mdash; dashes.`);
   });
+
+  it("should not convert special characters when deactivated at the file level", () => {
+    // prepare
+    const mdFile = {
+      type: consts.fileType.md,
+      path: 'start/markdown.md',
+      relativePath: 'markdown.md',
+      filename: 'markdown.md',
+      title: 'markdown'
+    };
+
+    const folder = {
+      type: consts.fileType.folder,
+      filename: 'subfolder',
+      path: 'start/subfolder',
+      relativePath: 'subfolder',
+      title: 'subfolder',
+      content: [mdFile]
+    };
+    const folderContent = [
+      mdFile,
+      folder
+    ];
+
+    const content = "---\ntitle: This is title\ncat: category\nspecialCharacters: false---\n-content-\n This is the[^1] content[^2]. It has " +
+      "some refs ([ref](http://something.com)).\n\n# notes\n\n[^1]: Footnote 1\n\n- [^2]: Footnote 2\n\n" +
+      "Small --> <-> <-- arrows and big ==> <=> <== arrows. En -- and Em --- dashes.";
+    const fakeFs = td.object(["readFileSync"]);
+    td.when(fakeFs.readFileSync(mdFile.path)).thenReturn(content);
+    const fakeMarked = (content) => `-${content}-`
+
+    const deps = {
+      marked: fakeMarked,
+      fs: fakeFs
+    }
+
+    // when
+    processMd({ folderContent, deps });
+    mdExtensions({ folderContent, deps })
+    mdConvert({ folderContent, deps })
+
+    // then
+    should(mdFile.content).containEql(`the<sup><a name="ref-1" href="#note-1">[1]</a></sup>`);
+    should(mdFile.content).containEql(`content<sup><a name="ref-2" href="#note-2">[2]</a></sup>`);
+    should(mdFile.content).containEql(`<a name="note-1" href="#ref-1">[1]</a>: Footnote 1`);
+    should(mdFile.content).containEql(`<a name="note-2" href="#ref-2">[2]</a>: Footnote 2`);
+    should(mdFile.content).containEql(`some refs<sup>[ref](http://something.com)</sup>`);
+    should(mdFile.content).containEql(`Small --> <-> <-- arrows and big ==> <=> <== arrows. En -- and Em --- dashes.`);
+  });
 });

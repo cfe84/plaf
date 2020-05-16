@@ -105,7 +105,7 @@ const pipeline = [
 
 if (mdExtensionsActive) {
   pipeline.push(
-    { order: 360, step: mdExtensions },
+    { order: 320, step: mdExtensions },
     { order: 900, step: generateTags },
   )
 }

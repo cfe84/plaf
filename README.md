@@ -124,7 +124,8 @@ Add a `.plaf` file in a folder. Give it properties the same way you would a file
 
 If you use #tags in your md files, then plaf will use them and generate a tags index.
 
-Plaf will also convert --> to &rarr; and ==> to &rArr; (and same for left).
+Plaf will also convert --> to &rarr; and ==> to &rArr; (and same for left). You can also try <=>, -- and ---. To deactivate special characters processing, add `specialCharacters: false` in the front-matter.
+
 
 It also handle footnotes in this format[^1].
 

@@ -27,29 +27,28 @@ const processMd = ({ folderContent }) => {
       .replace(referenceRegex, `$1<sup><a name="ref-$2" href="#note-$2">[$2]</a></sup>`)
   }
 
-  const replaceArrows = (content) => {
-    const replacements = [
-      [/<->/g, "&harr;"],
-      [/-->/g, "&rarr;"],
-      [/<--/g, "&larr;"],
-      [/<=>/g, "&hArr;"],
-      [/==>/g, "&rArr;"],
-      [/<==/g, "&lArr;"],
-      [/---/g, "&mdash;"],
-      [/--/g, "&ndash;"],
-    ]
+  const replacements = [
+    [/<->/g, "&harr;"],
+    [/-->/g, "&rarr;"],
+    [/<--/g, "&larr;"],
+    [/<=>/g, "&hArr;"],
+    [/==>/g, "&rArr;"],
+    [/<==/g, "&lArr;"],
+    [/---/g, "&mdash;"],
+    [/--/g, "&ndash;"],
+  ]
 
-    const pipeline =
-      replacements
-        .map(replacement => (input) => input.replace(replacement[0], replacement[1]))
-        .reduce((pipeline, step) => (input) => step(pipeline(input)))
-
-    return pipeline(content)
-  }
+  const replaceSpecialCharacters =
+    replacements
+      .map(replacement => (input) => input.replace(replacement[0], replacement[1]))
+      .reduce((pipeline, step) => (input) => step(pipeline(input)))
 
   const processMd = (file) => {
     file.properties.tags = getTags(file.content);
-    file.content = replaceTags(replaceArrows(replaceRefs(replaceFootNotes(file.content))));
+    file.content = replaceTags(replaceRefs(replaceFootNotes(file.content)));
+    if (file.properties["specialCharacters"] === undefined || file.properties["specialCharacters"]) {
+      file.content = replaceSpecialCharacters(file.content)
+    }
   }
 
   folderContent
