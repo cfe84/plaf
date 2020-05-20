@@ -36,6 +36,8 @@ const processMd = ({ folderContent }) => {
     [/<==/g, "&lArr;"],
     [/---/g, "&mdash;"],
     [/--/g, "&ndash;"],
+    [/<</g, "&laquo;"],
+    [/>>/g, "&raquo;"],
   ]
 
   const replaceSpecialCharacters =
