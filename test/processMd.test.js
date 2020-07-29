@@ -2,6 +2,7 @@ const should = require("should");
 const td = require("testdouble");
 const processMd = require("../src/processMd")
 const mdExtensions = require("../src/mdExtensions")
+const mdWikiLinks = require("../src/mdWikiLinks")
 const mdConvert = require("../src/mdConvert")
 const consts = require("../src/consts");
 
@@ -198,6 +199,82 @@ describe("process markdown", () => {
     should(mdFile.content).containEql(`Small &rarr; &harr; &larr; arrows and big &rArr; &hArr; &lArr; arrows`);
     should(mdFile.content).containEql(`En &ndash; and Em &mdash; dashes.`);
     should(mdFile.content).containEql(`Left &laquo; and right &raquo;.`);
+  });
+
+  it("should convert wikilinks", () => {
+    // prepare
+    const mdFile = {
+      type: consts.fileType.md,
+      path: 'start/markdown.md',
+      relativePath: 'markdown.md',
+      filename: 'markdown.md',
+      title: 'markdown'
+    };
+
+    const file1 = {
+      type: consts.fileType.md,
+      path: 'start/ref/file-1.md',
+      relativePath: 'ref/file-1.md',
+      filename: 'file-1.md',
+      title: 'FILE_1'
+    };
+
+    const file2 = {
+      type: consts.fileType.md,
+      path: 'start/ref/file-2.md',
+      relativePath: 'ref/file-2.md',
+      filename: 'FILE-2.md',
+      title: 'FILE_2'
+    };
+
+    const folder = {
+      type: consts.fileType.folder,
+      filename: 'subfolder',
+      path: 'start/subfolder',
+      relativePath: 'subfolder',
+      title: 'subfolder',
+      content: [mdFile]
+    };
+
+    const reffolder = {
+      type: consts.fileType.folder,
+      filename: 'subfolder',
+      path: 'start/ref',
+      relativePath: 'ref',
+      title: 'ref',
+      content: [file1, file2]
+    };
+
+    const folderContent = [
+      mdFile,
+      folder,
+      reffolder,
+      file1,
+      file2
+    ];
+
+    const content = "This is the [[file-1]] and this is the [[file 2]].\n\n" +
+      "Also you can use [[file-1|labels]], and it leaves [[incorrect]] links untouched.";
+    const fakeFs = td.object(["readFileSync"]);
+    td.when(fakeFs.readFileSync(mdFile.path)).thenReturn(content);
+    const fakeMarked = (content) => `-${content}-`
+
+    const deps = {
+      marked: fakeMarked,
+      fs: fakeFs
+    }
+
+    // when
+    processMd({ folderContent, deps });
+    mdExtensions({ folderContent, deps })
+    mdWikiLinks({ folderContent, deps })
+    mdConvert({ folderContent, deps })
+
+    // then
+    should(mdFile.content).containEql(`<a href="/ref/file-1.html">FILE_1</a>`);
+    should(mdFile.content).containEql(`<a href="/ref/file-2.html">FILE_2</a>`);
+    should(mdFile.content).containEql(`<a href="/ref/file-1.html">labels</a>`);
+    should(mdFile.content).containEql(`[[incorrect]]`);
   });
 
   it("should not convert special characters when deactivated at the file level", () => {

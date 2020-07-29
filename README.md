@@ -133,6 +133,8 @@ It also handle footnotes in this format[^1].
 
 It also handles references like this `([ref](some link))` and will make them appear as superscript<sup><a href="#">ref</a></sup>
 
+It processes wikilinks, such as `[[an article file name]]` or `[[an article file name|label for the link]]`. This will resolve to any markdown file in the current structure with a similar file name. It is case insensitive, and ignores spaces, dashed and underscores.
+
 If you don't want plaf to mess with your markdown, use the `--no-markdown-extensions` (or `-M` for short) command.
 
 **Build a client-side search index (experimental)**
@@ -179,3 +181,9 @@ title: search
 ```
 
 Folders and files can be skipped from indexing by adding a `noSearch` property in their config files or front matter.
+
+# What's new
+
+## 1.22
+
+Add support for WikiLinks.

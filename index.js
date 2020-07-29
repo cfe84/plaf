@@ -17,6 +17,7 @@ const saveCatalog = require("./src/saveCatalog")
 const generateSearch = require("./src/generateSearch")
 const usage = require("command-line-usage")
 const mdExtensions = require("./src/mdExtensions")
+const mdWikiLinks = require("./src/mdWikiLinks")
 const mdConvert = require("./src/mdConvert")
 
 const options = [
@@ -106,6 +107,7 @@ const pipeline = [
 if (mdExtensionsActive) {
   pipeline.push(
     { order: 320, step: mdExtensions },
+    { order: 330, step: mdWikiLinks },
     { order: 900, step: generateTags },
   )
 }
