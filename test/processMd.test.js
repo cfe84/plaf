@@ -175,7 +175,8 @@ describe("process markdown", () => {
 
     const content = "#toug title: This is title\ncat: category\n---\n-content-\n This is the[^1] content[^2]. It has " +
       "some refs ([ref](http://something.com)).\n\n# notes\n\n[^1]: Footnote 1\n\n- [^2]: Footnote 2\n\n" +
-      "Small --> <-> <-- arrows and big ==> <=> <== arrows. En -- and Em --- dashes. Left << and right >>.";
+      "Small --> <-> <-- arrows and big ==> <=> <== arrows. En -- and Em --- dashes. Left << and right >>.\n\n" +
+      "-- works but doesnt break this-- that--, --that that--one and that--- or that---one but this works ---"
     const fakeFs = td.object(["readFileSync"]);
     td.when(fakeFs.readFileSync(mdFile.path)).thenReturn(content);
     const fakeMarked = (content) => `-${content}-`
@@ -199,6 +200,7 @@ describe("process markdown", () => {
     should(mdFile.content).containEql(`Small &rarr; &harr; &larr; arrows and big &rArr; &hArr; &lArr; arrows`);
     should(mdFile.content).containEql(`En &ndash; and Em &mdash; dashes.`);
     should(mdFile.content).containEql(`Left &laquo; and right &raquo;.`);
+    should(mdFile.content).containEql(`&ndash; works but doesnt break this-- that--, --that that--one and that--- or that---one but this works &mdash;`);
   });
 
   it("should convert wikilinks", () => {

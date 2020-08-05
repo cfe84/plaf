@@ -34,8 +34,8 @@ const processMd = ({ folderContent }) => {
     [/<=>/g, "&hArr;"],
     [/==>/g, "&rArr;"],
     [/<==/g, "&lArr;"],
-    [/---/g, "&mdash;"],
-    [/--/g, "&ndash;"],
+    [/(?<=\n|^| )---(?=$| |\n)/g, "&mdash;"],
+    [/(?<=\n|^| )--(?=$| |\n)/g, "&ndash;"],
     [/<</g, "&laquo;"],
     [/>>/g, "&raquo;"],
   ]

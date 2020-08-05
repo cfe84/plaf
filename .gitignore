@@ -5,7 +5,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .nyc_output
-
+.DS_Store
 rendered
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
