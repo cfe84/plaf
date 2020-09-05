@@ -190,7 +190,7 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 
 # What's new
 
-## 1.3
+## 1.23
 
 - Render search page if none is existing
 
