@@ -13,6 +13,14 @@ describe("renderMd", () => {
     content: "the content",
     properties: { title: 'The title' }
   };
+  const mdFileFolderDoesntExist = {
+    type: consts.fileType.md,
+    path: 'start/markdown2.md',
+    relativePath: 'outfolder/markdown2.md',
+    filename: 'markdown2.md',
+    content: "the content",
+    properties: { title: 'The title' }
+  };
   const mdFileCustomLayout = {
     type: consts.fileType.md,
     path: 'start/markdown2.md',

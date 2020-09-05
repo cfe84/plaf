@@ -14,7 +14,8 @@ const renderMd = require("./src/renderMd");
 const generateIndex = require("./src/generateIndex")
 const generateTags = require("./src/generateTags")
 const saveCatalog = require("./src/saveCatalog")
-const generateSearch = require("./src/generateSearch")
+const generateSearchCatalog = require("./src/generateSearchCatalog")
+const generateSearchPage = require("./src/generateSearchPage")
 const usage = require("command-line-usage")
 const mdExtensions = require("./src/mdExtensions")
 const mdWikiLinks = require("./src/mdWikiLinks")
@@ -114,9 +115,10 @@ if (mdExtensionsActive) {
 
 if (search) {
   pipeline.push(
+    { order: 330, step: generateSearchPage },
     { order: 1000, step: (context) => fs.mkdirSync(path.join(context.outputFolder, "search"), { recursive: true }) },
     { order: 1100, step: saveCatalog },
-    { order: 1200, step: generateSearch },
+    { order: 1200, step: generateSearchCatalog },
   )
 }
 

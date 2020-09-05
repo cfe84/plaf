@@ -1,4 +1,4 @@
-const generateSearch = ({ outputFolder, deps }) => {
+const generateSearchCatalog = ({ outputFolder, deps }) => {
   const lunr = `${deps.fs.readFileSync(deps.path.join(__dirname, "lib", "lunr.js"))}`;
   const search = `${deps.fs.readFileSync(deps.path.join(__dirname, "loadSearch.js"))}`;
 
@@ -7,4 +7,4 @@ const generateSearch = ({ outputFolder, deps }) => {
   deps.fs.writeFileSync(deps.path.join(outputFolder, "search", "search.js"), content);
 }
 
-module.exports = generateSearch
+module.exports = generateSearchCatalog

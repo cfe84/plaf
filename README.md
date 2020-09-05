@@ -137,13 +137,14 @@ It processes wikilinks, such as `[[an article file name]]` or `[[an article file
 
 If you don't want plaf to mess with your markdown, use the `--no-markdown-extensions` (or `-M` for short) command.
 
-**Build a client-side search index (experimental)**
+**Build a client-side search index**
 
-Plaf uses [Lunr](https://lunrjs.com/guides/getting_started.html) to build a search catalog. If you use `--generate-search` it will build two files:
+Plaf uses [Lunr](https://lunrjs.com/guides/getting_started.html) to build a search catalog. If you use `--generate-search` it will build three files:
+- `/search/index.html` which is a basic search page
 - `/search/catalog.js` which contains the search catalog as json (in `const catalog=`).
 - `/search/search.js` which contains the search libs.
 
-These can be used by adding a `search.md` file in a `search` directory in your folder using these. For example:
+You can customize the search page by adding a `search.md` file in a `search` directory in your folder using these. For example:
 
 ```
 ---
@@ -184,10 +185,14 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 
 # Features
 
-- [ ] generate search page 
+- [x] generate search page 
 - [ ] serve dynamically 
 
 # What's new
+
+## 1.3
+
+- Render search page if none is existing
 
 ## 1.22
 
