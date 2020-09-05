@@ -182,6 +182,11 @@ title: search
 
 Folders and files can be skipped from indexing by adding a `noSearch` property in their config files or front matter.
 
+# Features
+
+- [ ] generate search page 
+- [ ] serve dynamically 
+
 # What's new
 
 ## 1.22
