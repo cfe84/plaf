@@ -42,7 +42,7 @@
   "devDependencies": {
     "mocha": "^7.1.0",
     "node-watch": "^0.6.3",
-    "npm-watch": "^0.6.0",
+    "npm-watch": "^0.7.0",
     "nyc": "^15.0.0",
     "should": "^13.2.3",
     "testdouble": "^3.13.0"
