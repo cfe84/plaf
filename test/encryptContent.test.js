@@ -14,6 +14,7 @@ describe("encrypt content", () => {
       relativePath: "subfolder/mdFile-1.md",
       title: "title-1",
       content: "This is markdown",
+      mdcontent: "This is markdown",
       properties: { title: "title-1", tags: ['tag-1', 'tag-2'] }
     };
     const mdFile2 = {
@@ -22,6 +23,7 @@ describe("encrypt content", () => {
       relativePath: "subfolder/mdFile-1.md",
       title: "title-1",
       content: "This is markdown also",
+      mdcontent: "This is markdown also",
       properties: { password: "pwd2", title: "title-1", tags: ['tag-1', 'tag-2'] }
     };
     const txtFile = {
@@ -63,9 +65,15 @@ describe("encrypt content", () => {
       should(folderContent[1].content).eql(`TEMPLATE=${deps.encrypt("This is markdown also", "pwd2")}=`)
     })
 
+    it("removes markdown content once encrypted", () => {
+      should(folderContent[0].mdcontent).eql("")
+      should(folderContent[1].mdcontent).eql("")
+    })
+
     it("doesn't touch text files", () => {
       should(folderContent[2].content).eql("This is text")
     })
+
   })
 
   context("with no password", () => {
@@ -80,6 +88,11 @@ describe("encrypt content", () => {
 
     it("encrypts markdown content with file specific password", () => {
       should(folderContent[1].content).eql(`TEMPLATE=${deps.encrypt("This is markdown also", "pwd2")}=`)
+    })
+
+    it("removes markdown content once encrypted", () => {
+      should(folderContent[0].mdcontent).eql("This is markdown")
+      should(folderContent[1].mdcontent).eql("")
     })
 
     it("doesn't touch text files", () => {

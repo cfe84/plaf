@@ -10,6 +10,7 @@ const encryptContent = (defaultPassword) => ({ deps, folderContent }) => {
       const password = content.properties.password || defaultPassword
       content.content = deps.encrypt(content.content, password)
       content.content = template(content)
+      content.mdcontent = ""
     })
 }
 
