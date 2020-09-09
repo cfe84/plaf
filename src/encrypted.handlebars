@@ -1,16 +1,30 @@
 <div id="encrypted-content">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
   <script>
-    const decrypt = () => {
-      const password = document.getElementById("decryption-password").value
+    const decrypt = (password) => {
       const content = "{{{content}}}"
-      const decryptedDocument = CryptoJS.AES.decrypt(content, password)
-      document.getElementById("encrypted-content").outerHTML = decryptedDocument.toString(CryptoJS.enc.Utf8)
+      const decryptedDocument = CryptoJS.AES.decrypt(content, password).toString(CryptoJS.enc.Utf8)
+      if (decryptedDocument) {
+        document.getElementById("encrypted-content").outerHTML = decryptedDocument
+        return true
+      } else return false
+    }
+    const decryptFromForm = () => {
+      try {
+        const password = document.getElementById("decryption-password").value
+        const save = document.getElementById("save-password").checked
+        if (decrypt(password) && save) {
+          localStorage.setItem("plaf-password", password)
+        }
+      } catch (error) {
+        console.error(error)
+      }
     }
   </script>
   This page is encrypted.<br />
   Password: <input id="decryption-password" type="password" onkeyup="onkeyup" />
-  <input name="Decrypt" type="submit" onclick="decrypt()" />
+  <input name="Decrypt" type="submit" onclick="decryptFromForm()" />
+  <input name="Save password" id="save-password" type="checkbox" />
   <script>
     document.getElementById("decryption-password").addEventListener("keyup",
       function (e) {
@@ -19,5 +33,9 @@
           decrypt()
         }
       })
+    const password = localStorage.getItem("plaf-password")
+    if (password) {
+      decrypt(password)
+    }
   </script>
 </div>
