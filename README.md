@@ -192,7 +192,7 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 - [x] generate search page 
 - [ ] serve dynamically 
 - [x] Encrypt content
-- [ ] Cache password
+- [x] Cache password
 
 # What's new
 
