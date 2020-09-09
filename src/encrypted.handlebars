@@ -1,0 +1,23 @@
+<div id="encrypted-content">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+  <script>
+    const decrypt = () => {
+      const password = document.getElementById("decryption-password").value
+      const content = "{{{content}}}"
+      const decryptedDocument = CryptoJS.AES.decrypt(content, password)
+      document.getElementById("encrypted-content").outerHTML = decryptedDocument.toString(CryptoJS.enc.Utf8)
+    }
+  </script>
+  This page is encrypted.<br />
+  Password: <input id="decryption-password" type="password" onkeyup="onkeyup" />
+  <input name="Decrypt" type="submit" onclick="decrypt()" />
+  <script>
+    document.getElementById("decryption-password").addEventListener("keyup",
+      function (e) {
+        if (e.keyCode === 13) {
+          e.preventDefault()
+          decrypt()
+        }
+      })
+  </script>
+</div>

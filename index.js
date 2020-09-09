@@ -20,6 +20,8 @@ const usage = require("command-line-usage")
 const mdExtensions = require("./src/mdExtensions")
 const mdWikiLinks = require("./src/mdWikiLinks")
 const mdConvert = require("./src/mdConvert")
+const encryptContent = require("./src/encryptContent")
+const crypto = require("crypto-js")
 
 const options = [
   { name: "help", alias: "h", type: Boolean, multiple: false, description: "Display this message" },
@@ -29,6 +31,7 @@ const options = [
   { name: "template", alias: "t", type: String, multiple: false, description: "Default template file" },
   { name: "template-folder", alias: "T", type: String, multiple: false, description: "Folder where templates will be looked for" },
   { name: "generate-search", alias: "s", type: Boolean, multiple: false, description: "Generate a search index (experimental)" },
+  { name: "password", alias: "p", type: String, multiple: false, description: "Encrypts markdown content with the provided password" },
   { name: "no-md-extensions", alias: "M", type: Boolean, multiple: false, description: "Don't use the md extensions" }
 ]
 
@@ -82,8 +85,10 @@ if (command["generate-search"]) {
 if (command["no-md-extensions"]) {
   mdExtensionsActive = false;
 }
+const contentEncrypter = encryptContent(command.password ? command.password.value : undefined)
+const encrypt = (content, password) => crypto.AES.encrypt(content, password).toString()
 
-const deps = { fs, path, handlebars, marked }
+const deps = { fs, path, handlebars, marked, encrypt }
 deps.getTemplate = templateFactory(defaultTemplate, templateFolder, deps)
 
 const context = {
@@ -98,6 +103,7 @@ const pipeline = [
   { order: 200, step: preprocess },
   { order: 300, step: processMd },
   { order: 340, step: mdConvert },
+  { order: 360, step: contentEncrypter },
   { order: 400, step: cleanup },
   { order: 500, step: buildDirectoryStructure },
   { order: 600, step: copyFiles },
@@ -115,7 +121,7 @@ if (mdExtensionsActive) {
 
 if (search) {
   pipeline.push(
-    { order: 330, step: generateSearchPage },
+    { order: 390, step: generateSearchPage },
     { order: 1000, step: (context) => fs.mkdirSync(path.join(context.outputFolder, "search"), { recursive: true }) },
     { order: 1100, step: saveCatalog },
     { order: 1200, step: generateSearchCatalog },

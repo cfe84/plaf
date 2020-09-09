@@ -33,6 +33,7 @@
   "homepage": "https://github.com/cfe84/plaf#readme",
   "dependencies": {
     "command-line-usage": "^6.1.0",
+    "crypto-js": "^4.0.0",
     "handlebars": "^4.7.6",
     "lunr": "^2.3.8",
     "marked": "^0.8.0",
