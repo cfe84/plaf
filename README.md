@@ -137,6 +137,10 @@ It processes wikilinks, such as `[[an article file name]]` or `[[an article file
 
 If you don't want plaf to mess with your markdown, use the `--no-markdown-extensions` (or `-M` for short) command.
 
+**Encrypt content**
+
+Markdown content can be encrypted using AES and your password. To do so, either specify option `--password` when running plaf, or specify a `password` property in the front matter. Your content gets encrypted using AES, and decrypted on the client side if the right password is provided.
+
 **Build a client-side search index**
 
 Plaf uses [Lunr](https://lunrjs.com/guides/getting_started.html) to build a search catalog. If you use `--generate-search` it will build three files:
@@ -187,8 +191,14 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 
 - [x] generate search page 
 - [ ] serve dynamically 
+- [x] Encrypt content
+- [x] Cache password
 
 # What's new
+
+## 1.24
+
+- Encrypt content
 
 ## 1.23
 

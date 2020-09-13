@@ -1,6 +1,6 @@
 {
   "name": "plaf",
-  "version": "1.23.3",
+  "version": "1.24.1",
   "description": "Run plaf in a directory with markdown files, and PLAF you have a static website",
   "main": "index.js",
   "scripts": {
@@ -33,6 +33,7 @@
   "homepage": "https://github.com/cfe84/plaf#readme",
   "dependencies": {
     "command-line-usage": "^6.1.0",
+    "crypto-js": "^4.0.0",
     "handlebars": "^4.7.6",
     "lunr": "^2.3.8",
     "marked": "^0.8.0",
