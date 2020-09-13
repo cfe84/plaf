@@ -26,7 +26,7 @@
   <input name="Decrypt" type="submit" onclick="decryptFromForm_{{{id}}}()" value="Decrypt" /><br />
   <input id="save-password-{{{id}}}" type="checkbox" /> Save password
   <script>
-    function() {
+    (function() {
       document.getElementById("decryption-password-{{{id}}}").addEventListener("keyup",
         function (e) {
           if (e.keyCode === 13) {
@@ -38,6 +38,6 @@
       if (password) {
         decrypt_{{{id}}}(password)
       }
-    }()
+    })()
   </script>
 </div>
