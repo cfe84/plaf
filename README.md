@@ -198,6 +198,10 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 
 # What's new
 
+## 1.25
+
+- Add unique id to encrypted content to allow multiple encrypted blobs per page
+
 ## 1.24
 
 - Encrypt content
