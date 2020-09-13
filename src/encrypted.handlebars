@@ -12,8 +12,8 @@
     const decryptFromForm_{{{ id }}} = () => {
       try {
         const password = document.getElementById("decryption-password-{{{id}}}").value
-        const save = document.getElementById("save-password").checked
-        if (decrypt_{{{ id }}}(password) && save) {
+        const save = document.getElementById("save-password-{{{id}}}").checked
+        if (decrypt_{{{id}}}(password) && save) {
           localStorage.setItem("plaf-password", password)
         }
       } catch (error) {
@@ -23,19 +23,21 @@
   </script>
   This page is password protected.<br />
   <input placeholder="Password" id="decryption-password-{{{id}}}" type="password" onkeyup="onkeyup" />
-  <input name="Decrypt" type="submit" onclick="decryptFromForm_{{{ id }}}()" value="Decrypt" /><br />
-  <input id="save-password" type="checkbox" /> Save password
+  <input name="Decrypt" type="submit" onclick="decryptFromForm_{{{id}}}()" value="Decrypt" /><br />
+  <input id="save-password-{{{id}}}" type="checkbox" /> Save password
   <script>
-    document.getElementById("decryption-password-{{{id}}}").addEventListener("keyup",
-      function (e) {
-        if (e.keyCode === 13) {
-          e.preventDefault()
-          decrypt_{{{ id }}}()
-        }
-      })
-    const password = localStorage.getItem("plaf-password")
-    if (password) {
-      decrypt_{{{ id }}}(password)
-    }
+    function() {
+      document.getElementById("decryption-password-{{{id}}}").addEventListener("keyup",
+        function (e) {
+          if (e.keyCode === 13) {
+            e.preventDefault()
+            decrypt_{{{id}}}()
+          }
+        })
+      const password = localStorage.getItem("plaf-password")
+      if (password) {
+        decrypt_{{{id}}}(password)
+      }
+    }()
   </script>
 </div>
