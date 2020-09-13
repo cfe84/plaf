@@ -141,6 +141,8 @@ If you don't want plaf to mess with your markdown, use the `--no-markdown-extens
 
 Markdown content can be encrypted using AES and your password. To do so, either specify option `--password` when running plaf, or specify a `password` property in the front matter. Your content gets encrypted using AES, and decrypted on the client side if the right password is provided.
 
+The interesting thing is that since the content gets replaced by an HTML widget that decrypts itself, you can use the content of multiple encrypted files in an index page and still get it protected but readable if you have the password.
+
 **Build a client-side search index**
 
 Plaf uses [Lunr](https://lunrjs.com/guides/getting_started.html) to build a search catalog. If you use `--generate-search` it will build three files:
