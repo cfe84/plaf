@@ -1,11 +1,13 @@
 const compositeFs = require("../src/compositeFs")
 const inMemoryFs = require("../src/inMemoryFs")
+const linkFs = require("../src/linkFs")
 
 describe("CompositeFS", () => {
   // given
   fs1 = inMemoryFs({})
   fs2 = inMemoryFs({})
-  compFs = compositeFs(fs1, fs2)
+  fs3 = linkFs({ fs: fs1 })
+  compFs = compositeFs(fs1, fs2, fs3)
   fs1.mkdirSync("root")
   fs1.writeFileSync("root/file1.txt", "file1")
   fs2.mkdirSync("root")
@@ -18,6 +20,8 @@ describe("CompositeFS", () => {
   const file2 = compFs.readFileSync("root/file2.txt")
   compFs.writeFileSync("root/file3.txt", "file3")
   const file3 = fs1.readFileSync("root/file3.txt")
+  compFs.copyFileSync("root/file3.txt", "out/file3.txt")
+  const file4 = fs3.readFileSync("out/file3.txt")
 
   // then
   it("should read from fs1 first", () => should(file1).eql("file1"))
@@ -32,5 +36,8 @@ describe("CompositeFS", () => {
   it("should throw for directory not found", () => {
     should(() => compositeFs.readdirSync("root/dir3")).throw()
     should(() => compositeFs.lstatSync("root/dir3").isDirectory()).throw()
+  })
+  it("should default to the first capable for copying", () => {
+    should(file4).eql("file3")
   })
 })

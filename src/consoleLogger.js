@@ -5,7 +5,9 @@ const levels = {
   "warn": 3,
   "warning": 3,
   "err": 4,
-  "error": 4
+  "error": 4,
+  "none": 10,
+  "off": 10
 }
 
 const consoleLogger = (logLevel = "info") => {

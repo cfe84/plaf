@@ -27,6 +27,7 @@ const crypto = require("crypto-js");
 const inMemoryFs = require("./src/inMemoryFs");
 const compositeFs = require("./src/compositeFs");
 const server = require("./src/server");
+const linkFs = require("./src/linkFs");
 
 const serveOptions = [
   { name: "port", alias: "p", type: Number },
@@ -74,6 +75,7 @@ let inMemFs = undefined
 let password = undefined
 let logLevel = "info"
 const inMemoryStruct = {}
+const deps = {}
 
 const command = parseCommandLine(options);
 if (command.log) {
@@ -121,7 +123,8 @@ if (command["password"]) {
 if (command["serve"]) {
   serve = true
   inMemFs = inMemoryFs(inMemoryStruct)
-  fs = compositeFs(inMemFs, systemFs)
+  lfs = linkFs(deps)
+  fs = compositeFs(lfs, inMemFs, systemFs)
   logger.debug(`Option - serve`)
   if (command.serve.port) {
     port = command.serve.port.value
@@ -137,7 +140,15 @@ if (command["serve"]) {
 const contentEncrypter = encryptContent(password)
 const encrypt = (content, pwd) => crypto.AES.encrypt(content, pwd).toString()
 
-const deps = { fs, path, handlebars, marked, encrypt, inMemFs, logger }
+deps.fs = fs
+deps.path = path
+deps.handlebars = handlebars
+deps.marked = marked
+deps.encrypt = encrypt
+deps.inMemFs = inMemFs
+deps.linkFs = lfs
+deps.logger = logger
+
 const initializedTemplateFactory = templateFactory(defaultTemplate, templateFolder, deps)
 deps.getTemplate = initializedTemplateFactory
 
@@ -150,6 +161,7 @@ const pipeline = [
   { order: 340, step: mdConvert },
   { order: 360, step: contentEncrypter },
   { order: 500, step: buildDirectoryStructure },
+  { order: 600, step: copyFiles },
   { order: 700, step: renderMd },
   { order: 800, step: generateIndex },
 ]
@@ -162,7 +174,6 @@ if (serve) {
   // When actually generating, cleanup output folder and copy files
   pipeline.push(
     { order: 400, step: cleanup },
-    { order: 600, step: copyFiles },
   )
 }
 
