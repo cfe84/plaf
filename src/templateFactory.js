@@ -1,6 +1,7 @@
 const handlebars = require("handlebars");
 
 const templateFactory = (defaultTemplateName, templateFolder, deps) => {
+  const logger = deps.logger || { warn: () => { } }
 
   const DEFAULT_TEMPLATE = deps.path.join(__dirname, "default.handlebars");
 
@@ -54,7 +55,7 @@ const templateFactory = (defaultTemplateName, templateFolder, deps) => {
         return `${deps.fs.readFileSync(properties.template)}`;
       } else {
         if (properties.template !== "index" && properties.template !== "tags") {
-          deps.logger.warn(`Template not found: neither ${templatePath} nor ${properties.template} files were found. Defaulting to default template`)
+          logger.warn(`Template not found: neither ${templatePath} nor ${properties.template} files were found. Defaulting to default template`)
         }
         return null;
       }

@@ -28,9 +28,9 @@ const compositeFs = (...fsArray) => {
       for (let i = 0; i < fsArray.length; i++) {
         try {
           return fsArray[i].copyFileSync(from, to)
-        } catch { }
+        } catch (err) { }
       }
-      throw Error(`ENOENT: no such file or directory, copy '${filePath}'`)
+      throw Error(`ENOENT: no such file or directory, copy '${from}' to '${to}'`)
     },
     existsSync: (filename) => fsArray.map(fs => fs.existsSync(filename)).reduce((res, val) => res || val, false),
     mkdirSync: (folderPath) => {
