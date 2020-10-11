@@ -71,6 +71,7 @@ let mdExtensionsActive = true
 let serve = false
 let port = 8080
 let fs = systemFs
+let lfs = undefined
 let inMemFs = undefined
 let password = undefined
 let logLevel = "info"
