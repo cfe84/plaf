@@ -195,15 +195,40 @@ if (search) {
 }
 
 const runPipeline = () => {
-  logger.info("Running generation pipeline")
+  logger.info("Pipeline - Running generation pipeline")
   pipeline
     .sort((a, b) => a.order - b.order)
     .forEach(step => step.step(context))
+  logger.info("Pipeline - Done")
+
+}
+
+const watchAndRun = () => {
+  let needsToRun = true
+  const loop = () => {
+    try {
+      if (needsToRun) {
+        runPipeline()
+      }
+    }
+    catch (error) {
+      deps.logger.error(`Watcher - ${error}`)
+    }
+    finally {
+      needsToRun = false
+      setTimeout(() => loop(), 250)
+    }
+  }
+  loop()
+  systemFs.watch(inputFolder, { recursive: true }, (evt, fileName) => {
+    logger.debug(`Watcher - ${fileName} changed, running pipeline`)
+    needsToRun = true
+  })
 }
 
 if (serve) {
   // when serving, pipeline runs everytime a change occurs
-  runPipeline()
+  watchAndRun()
   server(context)
 } else {
   // if generating, pipeline runs once

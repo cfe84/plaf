@@ -30,6 +30,10 @@ Use `--in` (or `-i`) to specify the input folder.
 
 Use `--out` (or `-o`) to specify the output folder. **THE CONTENT OF THE OUTPUT FOLDER WILL BE WIPED BEFORE RENDERING, MAKE SURE YOU'RE OK WITH THAT**.
 
+**Use plaf as server**
+
+If you want to navigate your content directly without generating a folder, plaf can act as a server. Use option `--serve` and connect to http://localhost:8080 (or use option `--port 1234` to specify which port to use ; 8080 is default)
+
 **Use templates**
 
 Use your own templates using [handlebars](https://handlebarsjs.com) syntax. The content goes into a `content` variable. The title goes into a `title` variable. [This is an example](https://github.com/cfe84/plaf/blob/master/src/default.handlebars) of what a template looks like:
@@ -143,6 +147,7 @@ Markdown content can be encrypted using AES and your password. To do so, either 
 
 The interesting thing is that since the content gets replaced by an HTML widget that decrypts itself, you can use the content of multiple encrypted files in an index page and still get it protected but readable if you have the password.
 
+
 **Build a client-side search index**
 
 Plaf uses [Lunr](https://lunrjs.com/guides/getting_started.html) to build a search catalog. If you use `--generate-search` it will build three files:
@@ -192,11 +197,15 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 # Features
 
 - [x] generate search page 
-- [ ] serve dynamically 
+- [x] serve dynamically 
 - [x] Encrypt content
 - [x] Cache password
 
 # What's new
+
+## 1.30
+
+- Add `--serve` which dynamically generates the HTML content and serves it from memory.
 
 ## 1.25
 

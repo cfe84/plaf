@@ -54,7 +54,7 @@ const templateFactory = (defaultTemplateName, templateFolder, deps) => {
         return `${deps.fs.readFileSync(properties.template)}`;
       } else {
         if (properties.template !== "index" && properties.template !== "tags") {
-          console.warn(`Template not found: neither ${templatePath} nor ${properties.template} files were found. Defaulting to default template`)
+          deps.logger.warn(`Template not found: neither ${templatePath} nor ${properties.template} files were found. Defaulting to default template`)
         }
         return null;
       }
