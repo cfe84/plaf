@@ -1,12 +1,3 @@
-const fakeFs = (structure) => {
-  return {
-    readdirSync: (filename) => structure[filename].files,
-    lstatSync: (filename) => ({
-      isDirectory: () => structure[filename].type === "folder"
-    }),
-    readFileSync: (file) => structure[file].content,
-    existsSync: (filename) => !!structure[filename]
-  }
-}
+const inMemoryFs = require("../src/inMemoryFs")
 
-module.exports = fakeFs;
+module.exports = inMemoryFs;

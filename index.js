@@ -1,13 +1,15 @@
 const { parseCommandLine } = require("yaclip");
-const fs = require("fs");
+const systemFs = require("fs");
 const path = require("path")
 const handlebars = require("handlebars")
 const marked = require("marked");
 const templateFactory = require("./src/templateFactory")
+const consoleLogger = require("./src/consoleLogger")
 const crawl = require("./src/crawl")
 const preprocess = require("./src/preprocess")
 const processMd = require("./src/processMd")
 const cleanup = require("./src/cleanup");
+const cleanupInMemFs = require("./src/cleanupInMemFs");
 const buildDirectoryStructure = require("./src/buildDirectoryStructure")
 const copyFiles = require("./src/copyFiles");
 const renderMd = require("./src/renderMd");
@@ -21,10 +23,19 @@ const mdExtensions = require("./src/mdExtensions")
 const mdWikiLinks = require("./src/mdWikiLinks")
 const mdConvert = require("./src/mdConvert")
 const encryptContent = require("./src/encryptContent")
-const crypto = require("crypto-js")
+const crypto = require("crypto-js");
+const inMemoryFs = require("./src/inMemoryFs");
+const compositeFs = require("./src/compositeFs");
+const server = require("./src/server");
+
+const serveOptions = [
+  { name: "port", alias: "p", type: Number },
+]
 
 const options = [
+  { name: "serve", alias: "s", type: Boolean, subcommands: serveOptions },
   { name: "help", alias: "h", type: Boolean, multiple: false, description: "Display this message" },
+  { name: "log", alias: "l", type: String, multiple: false, description: "Log level (debug, info, warn, error)" },
   { name: "name", alias: "n", type: String, multiple: false, description: "Name for the root" },
   { name: "out", alias: "o", type: String, multiple: false, description: "Folder where to render. This will be wiped out, be sure you're ok with that first" },
   { name: "in", alias: "i", type: String, multiple: false, description: "Folder which will be crawled and rendered" },
@@ -50,53 +61,87 @@ function displayHelp() {
   console.log(message);
 }
 
-let search = false;
-let inputFolder = process.cwd();
-let outputFolder = "rendered";
-let defaultTemplate = null;
-let name = path.basename(inputFolder);
-let mdExtensionsActive = true;
-
+let search = false
+let inputFolder = process.cwd()
+let outputFolder = "rendered"
+let defaultTemplate = null
+let name = path.basename(inputFolder)
+let mdExtensionsActive = true
+let serve = false
+let port = 8080
+let fs = systemFs
+let inMemFs = undefined
+let password = undefined
+let logLevel = "info"
+const inMemoryStruct = {}
 
 const command = parseCommandLine(options);
+if (command.log) {
+  logLevel = command.log.value;
+}
+const logger = consoleLogger(logLevel)
 if (command.help) {
   displayHelp();
   return;
 }
 if (command.out) {
   outputFolder = command.out.value;
+  logger.debug(`Option - Outputting to ${outputFolder}`)
 }
 if (command.in) {
   inputFolder = command.in.value;
+  logger.debug(`Option - Input from ${inputFolder}`)
 }
-let templateFolder = path.join(inputFolder, ".plaf");
+let templateFolder = path.join(inputFolder, ".plaf")
 if (command["template-folder"]) {
-  templateFolder = command["template-folder"].value;
+  templateFolder = command["template-folder"].value
+  logger.debug(`Option - Using template folder ${templateFolder}`)
 }
 if (command.template) {
-  defaultTemplate = command.template.value;
+  defaultTemplate = command.template.value
+  logger.debug(`Option - Using default template ${defaultTemplate}`)
 }
 if (command.name) {
   name = command.name.value
+  logger.debug(`Option - Using name ${name}`)
 }
 if (command["generate-search"]) {
-  search = true;
+  search = true
+  logger.debug(`Option - Generate search`)
 }
 if (command["no-md-extensions"]) {
-  mdExtensionsActive = false;
+  mdExtensionsActive = false
+  logger.debug(`Option - md extensions deactivated`)
 }
-const contentEncrypter = encryptContent(command.password ? command.password.value : undefined)
-const encrypt = (content, password) => crypto.AES.encrypt(content, password).toString()
-
-const deps = { fs, path, handlebars, marked, encrypt }
-deps.getTemplate = templateFactory(defaultTemplate, templateFolder, deps)
-
-const context = {
-  inputFolder,
-  outputFolder,
-  deps,
-  name
+if (command["password"]) {
+  password = command.password.value
+  logger.debug(`Option - Password specified, encrypting all markdown content`)
 }
+
+if (command["serve"]) {
+  serve = true
+  inMemFs = inMemoryFs(inMemoryStruct)
+  fs = compositeFs(inMemFs, systemFs)
+  logger.debug(`Option - serve`)
+  if (command.serve.port) {
+    port = command.serve.port.value
+    logger.debug(`Option - Serving on port ${port}`)
+  }
+  if (command["out"]) {
+    logger.warn("Warning: '--out' option specified, however file generation is deactivated when serving")
+  }
+} else {
+  logger.debug(`Option - '--serve' not specified, therefore just generating`)
+}
+
+const contentEncrypter = encryptContent(password)
+const encrypt = (content, pwd) => crypto.AES.encrypt(content, pwd).toString()
+
+const deps = { fs, path, handlebars, marked, encrypt, inMemFs, logger }
+const initializedTemplateFactory = templateFactory(defaultTemplate, templateFolder, deps)
+deps.getTemplate = initializedTemplateFactory
+
+const context = { inputFolder, outputFolder, deps, name, port, serve }
 
 const pipeline = [
   { order: 100, step: (context) => context.folderContent = crawl(context) },
@@ -104,12 +149,22 @@ const pipeline = [
   { order: 300, step: processMd },
   { order: 340, step: mdConvert },
   { order: 360, step: contentEncrypter },
-  { order: 400, step: cleanup },
   { order: 500, step: buildDirectoryStructure },
-  { order: 600, step: copyFiles },
   { order: 700, step: renderMd },
   { order: 800, step: generateIndex },
 ]
+
+if (serve) {
+  pipeline.push(
+    { order: 400, step: cleanupInMemFs }
+  )
+} else {
+  // When actually generating, cleanup output folder and copy files
+  pipeline.push(
+    { order: 400, step: cleanup },
+    { order: 600, step: copyFiles },
+  )
+}
 
 if (mdExtensionsActive) {
   pipeline.push(
@@ -128,6 +183,18 @@ if (search) {
   )
 }
 
-pipeline
-  .sort((a, b) => a.order - b.order)
-  .forEach(step => step.step(context))
+const runPipeline = () => {
+  logger.info("Running generation pipeline")
+  pipeline
+    .sort((a, b) => a.order - b.order)
+    .forEach(step => step.step(context))
+}
+
+if (serve) {
+  // when serving, pipeline runs everytime a change occurs
+  runPipeline()
+  server(context)
+} else {
+  // if generating, pipeline runs once
+  runPipeline()
+}
