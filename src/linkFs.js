@@ -6,7 +6,7 @@
 */
 const linkFs = (deps) => {
   let links = {}
-  const logger = deps.logger || { debug: () => { } }
+
   return {
     clear: () => {
       links = {}
@@ -29,6 +29,7 @@ const linkFs = (deps) => {
       return links[filename] !== undefined
     },
     copyFileSync: (actualFilename, linkFilename) => {
+      const logger = deps.logger || { debug: () => { } }
       logger.debug(`LinkFS - copying file from ${actualFilename} to ${linkFilename}`)
       links[linkFilename] = actualFilename
     }
