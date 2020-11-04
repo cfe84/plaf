@@ -210,11 +210,11 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 
 # What's new
 
-## 1.31
+## 1.27
 
 - Add support for search with query parameter
 
-## 1.30
+## 1.26
 
 - Add `--serve` which dynamically generates the HTML content and serves it from memory.
 
