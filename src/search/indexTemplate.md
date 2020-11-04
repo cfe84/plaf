@@ -2,8 +2,11 @@
 
 <script src="catalog.js"></script>
 <script src="search.js"></script>
-<script>
+<script>  
   function s(evt) {
+    if (window.history) {
+      window.history.pushState("", `Search: ${evt.value}`, `?q=${evt.value}`)
+    }
     const searchResultsComponent = document.getElementById("search-results")
     const res = search(evt.value)
     searchResultsComponent.innerHTML = "";
@@ -15,7 +18,7 @@
       })
       .forEach(elt => searchResultsComponent.appendChild(elt));
   }
-  loading = document.getElementById("loading").remove();
+  document.getElementById("loading").remove();
 </script>
 
 <input type="text" class="search-bar" id="search-bar" onkeyup="s(this)">
@@ -24,5 +27,13 @@
 </div>
 
 <script>
-  document.getElementById("search-bar").focus()
+  (() => {
+    document.getElementById("search-bar").focus()
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has("q")) {
+      const query = urlParams.get("q")
+      document.getElementById("search-bar").value = query
+      document.getElementById("search-bar").onkeyup()
+    }
+  })()
 </script>

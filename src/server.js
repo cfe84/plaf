@@ -1,5 +1,6 @@
 const http = require("http")
 const path = require("path")
+const url = require("url")
 
 const server = (context) => {
   const httpServer = http.createServer((req, res) => {
@@ -9,12 +10,13 @@ const server = (context) => {
       res.end()
     }
     context.deps.logger.debug(`Received request for ${req.url}`)
-    let url = req.url
-    if (url.substring(url.length - 1) === "/") {
-      url += "index.html"
+    const parsedUrl = url.parse(req.url, true)
+    let receivedUrl = parsedUrl.pathname
+    if (receivedUrl.substring(receivedUrl.length - 1) === "/") {
+      receivedUrl += "index.html"
     }
-    url = decodeURI(url)
-    const requestedFile = path.join(context.outputFolder, ...url
+    receivedUrl = decodeURI(receivedUrl)
+    const requestedFile = path.join(context.outputFolder, ...receivedUrl
       .substring(1)
       .split("/")
     )

@@ -1,4 +1,4 @@
-plaf is a markdown static website generator. It only expects you to write documents in markdown, with minimal profile. Use your own folder structure, your own file names, your own style with [handlebars](https://handlebarsjs.com/) templates. No config files. No conventions. 
+Plaf is a markdown static website generator. It only expects you to write documents in markdown, with minimal profile. It offers a search engine and password protection, everything on client side. Use your own folder structure, your own file names, your own style with [handlebars](https://handlebarsjs.com/) templates. No config files. No conventions.
 
 ## How does it work?
 
@@ -147,13 +147,14 @@ Markdown content can be encrypted using AES and your password. To do so, either 
 
 The interesting thing is that since the content gets replaced by an HTML widget that decrypts itself, you can use the content of multiple encrypted files in an index page and still get it protected but readable if you have the password.
 
-
-**Build a client-side search index**
+**Search**
 
 Plaf uses [Lunr](https://lunrjs.com/guides/getting_started.html) to build a search catalog. If you use `--generate-search` it will build three files:
 - `/search/index.html` which is a basic search page
 - `/search/catalog.js` which contains the search catalog as json (in `const catalog=`).
 - `/search/search.js` which contains the search libs.
+
+Therefore you can just navigate to `/search` on plaf's output and use a ready-made search page. The default search index supports a query parameter named `q` to search (e.g. `/search?q=terms`), which means you can add a plaf-generated website as a search engine to browsers.
 
 You can customize the search page by adding a `search.md` file in a `search` directory in your folder using these. For example:
 
@@ -201,9 +202,17 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 - [x] Encrypt content
 - [x] Cache password
 - [ ] Allow multiple passwords per file by encrypting the key in addition to the entire content
-- [ ] Support search by URL (to allow adding as a search engine in browser)
+- [x] Support search by URL (to allow adding as a search engine in browser)
+
+# Known issues
+
+1. `--serve` ignores `--in`
 
 # What's new
+
+## 1.31
+
+- Add support for search with query parameter
 
 ## 1.30
 
