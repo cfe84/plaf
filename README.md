@@ -24,15 +24,15 @@ plaf
 
 ## What else can I do?
 
+**Use plaf as server**
+
+If you just want to navigate your content directly in browser without actually generating the html files, plaf can act as a server. Use option `--serve` and connect to http://localhost:8080 (or use option `--port 1234` to specify which port to use ; 8080 is default). Plaf monitors content continuously and regenerates the markdown on change. 
+ 
 **Specify which folder to render, and where to output**
 
 Use `--in` (or `-i`) to specify the input folder.
 
 Use `--out` (or `-o`) to specify the output folder. **THE CONTENT OF THE OUTPUT FOLDER WILL BE WIPED BEFORE RENDERING, MAKE SURE YOU'RE OK WITH THAT**.
-
-**Use plaf as server**
-
-If you want to navigate your content directly without generating a folder, plaf can act as a server. Use option `--serve` and connect to http://localhost:8080 (or use option `--port 1234` to specify which port to use ; 8080 is default)
 
 **Use templates**
 
@@ -200,6 +200,8 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 - [x] serve dynamically 
 - [x] Encrypt content
 - [x] Cache password
+- [ ] Allow multiple passwords per file by encrypting the key in addition to the entire content
+- [ ] Support search by URL (to allow adding as a search engine in browser)
 
 # What's new
 
