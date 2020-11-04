@@ -200,6 +200,8 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 - [x] serve dynamically 
 - [x] Encrypt content
 - [x] Cache password
+- [ ] Allow multiple passwords per file by encrypting the key in addition to the entire content
+- [ ] Support search by URL (to allow adding as a search engine in browser)
 
 # What's new
 
