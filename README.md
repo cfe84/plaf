@@ -211,11 +211,15 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 
 # What's new
 
+## 1.28.1
+
+- Fix for CRLF
+
 ## 1.28
 
 - Add two attributes: `folderContent` and `mdFiles` to all entries containing a) the entire content and b) all md files in order to help building indexes.
 
-## 1.27 
+## 1.27
 
 - Add support for search with query parameter
 
