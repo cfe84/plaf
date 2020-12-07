@@ -5,11 +5,12 @@ const processMd = ({ folderContent, deps }) => {
 
 
   const parseContent = (content) => {
-    const headerStartLineIndex = content.indexOf("---\n");
+    const eol = content.indexOf("\r") >= 0 ? "\r\n" : "\n"
+    const headerStartLineIndex = content.indexOf(`---${eol}`);
     if (headerStartLineIndex !== 0) {
       return { content };
     }
-    const headerFinishLineIndex = content.indexOf("---\n", headerStartLineIndex + 3);
+    const headerFinishLineIndex = content.indexOf(`---${eol}`, headerStartLineIndex + 3);
     if (headerFinishLineIndex < 0) {
       return { content };
     }

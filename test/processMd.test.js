@@ -7,65 +7,68 @@ const mdConvert = require("../src/mdConvert")
 const consts = require("../src/consts");
 
 describe("process markdown", () => {
-  it("processes markdown", () => {
-    // prepare
-    const mdFile = {
-      type: consts.fileType.md,
-      path: 'start/markdown.md',
-      relativePath: 'markdown.md',
-      filename: 'markdown.md',
-      title: 'markdown.md'
-    };
-    const mdFileWithTag = {
-      type: consts.fileType.md,
-      path: 'start/markdown-with-tag.md',
-      relativePath: 'markdown-with-tag.md',
-      filename: 'markdown-with-tag.md',
-      title: 'markdown-with-tag.md'
-    };
-    const txtFile = {
-      type: consts.fileType.file,
-      path: 'start/text.txt',
-      relativePath: 'text.txt',
-      filename: 'text.txt',
-      title: 'text.txt'
-    };
-    const folder = {
-      type: consts.fileType.folder,
-      filename: 'subfolder',
-      path: 'start/subfolder',
-      relativePath: 'subfolder',
-      title: 'subfolder',
-      files: [mdFile, txtFile]
-    };
-    const folderContent = [
-      mdFile,
-      txtFile,
-      folder
-    ];
+  [{ name: "lf", eol: "\n" },
+  { name: "crlf", eol: "\r\n" }].forEach(param => {
+    it(`processes markdown with ${param.name}`, () => {
+      // prepare
+      const mdFile = {
+        type: consts.fileType.md,
+        path: 'start/markdown.md',
+        relativePath: 'markdown.md',
+        filename: 'markdown.md',
+        title: 'markdown.md'
+      };
+      const mdFileWithTag = {
+        type: consts.fileType.md,
+        path: 'start/markdown-with-tag.md',
+        relativePath: 'markdown-with-tag.md',
+        filename: 'markdown-with-tag.md',
+        title: 'markdown-with-tag.md'
+      };
+      const txtFile = {
+        type: consts.fileType.file,
+        path: 'start/text.txt',
+        relativePath: 'text.txt',
+        filename: 'text.txt',
+        title: 'text.txt'
+      };
+      const folder = {
+        type: consts.fileType.folder,
+        filename: 'subfolder',
+        path: 'start/subfolder',
+        relativePath: 'subfolder',
+        title: 'subfolder',
+        files: [mdFile, txtFile]
+      };
+      const folderContent = [
+        mdFile,
+        txtFile,
+        folder
+      ];
 
-    const fakeFs = td.object(["readFileSync"]);
-    td.when(fakeFs.readFileSync(mdFile.path)).thenReturn("---\ntitle: This is title\nsomething: \"in quotes\"\ncat: category\ncats: [123,456]---\n-content-");
-    const fakeMarked = td.object(["marked"]);
-    td.when(fakeMarked.marked("-content-")).thenReturn("marked-content");
+      const fakeFs = td.object(["readFileSync"]);
+      td.when(fakeFs.readFileSync(mdFile.path)).thenReturn(`---${param.eol}title: This is title${param.eol}something: \"in quotes\"${param.eol}cat: category${param.eol}cats: [123,456]---${param.eol}-content-`);
+      const fakeMarked = td.object(["marked"]);
+      td.when(fakeMarked.marked("-content-")).thenReturn("marked-content");
 
-    const deps = {
-      marked: fakeMarked.marked,
-      fs: fakeFs
-    }
+      const deps = {
+        marked: fakeMarked.marked,
+        fs: fakeFs
+      }
 
-    // when
-    processMd({ folderContent, deps });
-    mdConvert({ folderContent, deps })
+      // when
+      processMd({ folderContent, deps });
+      mdConvert({ folderContent, deps })
 
-    // then
-    should(mdFile.title).eql("This is title");
-    should(mdFile.properties.cat).eql("category")
-    should(mdFile.properties.something).eql("in quotes");
-    should(mdFile.properties.cats).deepEqual([123, 456]);
-    should(mdFile.content).eql("marked-content");
-    should(txtFile.content).be.undefined()
-  });
+      // then
+      should(mdFile.title).eql("This is title");
+      should(mdFile.properties.cat).eql("category")
+      should(mdFile.properties.something).eql("in quotes");
+      should(mdFile.properties.cats).deepEqual([123, 456]);
+      should(mdFile.content).eql("marked-content");
+      should(txtFile.content).be.undefined()
+    });
+  })
 
   it("processes markdown with no headers", () => {
     // prepare
