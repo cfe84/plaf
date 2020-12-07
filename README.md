@@ -203,6 +203,7 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 - [x] Cache password
 - [ ] Allow multiple passwords per file by encrypting the key in addition to the entire content
 - [x] Support search by URL (to allow adding as a search engine in browser)
+- [ ] Generate a tree structure as index
 
 # Known issues
 
@@ -210,7 +211,11 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 
 # What's new
 
-## 1.27
+## 1.28
+
+- Add two attributes: `folderContent` and `mdFiles` to all entries containing a) the entire content and b) all md files in order to help building indexes.
+
+## 1.27 
 
 - Add support for search with query parameter
 

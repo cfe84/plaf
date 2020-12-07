@@ -15,6 +15,8 @@ const preprocess = ({ folderContent, name }) => {
         item.outputFilename = item.filename;
         break;
     }
+    item.folderContent = folderContent
+    item.mdFiles = folderContent.filter(file => file.type === consts.fileType.md)
   })
 
   const root = folderContent.find(element => element.relativePath === "")
