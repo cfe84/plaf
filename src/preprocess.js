@@ -6,6 +6,7 @@ const preprocess = ({ folderContent, name }) => {
       case consts.fileType.md:
         item.title = item.filename.replace(/\.md$/i, "");
         item.outputFilename = item.filename.replace(/\.md$/i, ".html");
+        item.outputRelativePath = item.relativePath.replace(/\.md$/i, ".html");
         break;
 
       case consts.fileType.file:
@@ -13,6 +14,7 @@ const preprocess = ({ folderContent, name }) => {
       default:
         item.title = item.filename;
         item.outputFilename = item.filename;
+        item.outputRelativePath = item.relativePath;
         break;
     }
     item.folderContent = folderContent
