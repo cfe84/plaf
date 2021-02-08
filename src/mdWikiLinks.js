@@ -11,6 +11,10 @@ const processMd = ({ folderContent }) => {
   }
 
   const convertWikiLinkToHref = (originalMatch, nameMatch, labelMatch) => {
+    if (nameMatch[0] === "#") {
+      const tag = nameMatch.substr(1, nameMatch.length - 1)
+      return `<a href="/tags/${tag}.html">${tag}</a>`
+    }
     const file = resolveArticleName(nameMatch)
     if (file === undefined) {
       return originalMatch

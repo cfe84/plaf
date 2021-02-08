@@ -77,7 +77,7 @@ By default it's using your file names as title. You can override that with the h
 - `title`
 - `type`: `md` for markdown files, `folder` for folders.
 - `content` and `mdcontent`: the content.
-- `path`, `relativePath`: files paths
+- `path`, `relativePath`, `outputRelativePath`: files paths
 - `tags`: a list of tags for md files
 - `files`: a list of `files` contained in the folder or tag. These files have the same properties.
 
@@ -137,7 +137,7 @@ It also handle footnotes in this format[^1].
 
 It also handles references like this `([ref](some link))` and will make them appear as superscript<sup><a href="#">ref</a></sup>
 
-It processes wikilinks, such as `[[an article file name]]` or `[[an article file name|label for the link]]`. This will resolve to any markdown file in the current structure with a similar file name. It is case insensitive, and ignores spaces, dashed and underscores.
+It processes wikilinks, such as `[[an article file name]]` or `[[an article file name|label for the link]]`. This will resolve to any markdown file in the current structure with a similar file name. It is case insensitive, and ignores spaces, dashed and underscores. It also supports wikilinks for tags such as [[#my-tag]] which will link to the tag page.
 
 If you don't want plaf to mess with your markdown, use the `--no-markdown-extensions` (or `-M` for short) command.
 
@@ -210,6 +210,14 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 1. `--serve` ignores `--in`
 
 # What's new
+
+## 1.30
+
+- Support tags in wikilinks.
+
+## 1.29
+
+- Add outputRelativePath
 
 ## 1.28.1
 

@@ -259,7 +259,8 @@ describe("process markdown", () => {
     ];
 
     const content = "This is the [[file-1]] and this is the [[file 2]].\n\n" +
-      "Also you can use [[file-1|labels]], and it leaves [[incorrect]] links untouched.";
+      "Also you can use [[file-1|labels]], and it leaves [[incorrect]] links untouched.\n\n" +
+      "It also supports [[#tags]] links";
     const fakeFs = td.object(["readFileSync"]);
     td.when(fakeFs.readFileSync(mdFile.path)).thenReturn(content);
     const fakeMarked = (content) => `-${content}-`
@@ -279,6 +280,7 @@ describe("process markdown", () => {
     should(mdFile.content).containEql(`<a href="/ref/file-1.html">FILE_1</a>`);
     should(mdFile.content).containEql(`<a href="/ref/file-2.html">FILE_2</a>`);
     should(mdFile.content).containEql(`<a href="/ref/file-1.html">labels</a>`);
+    should(mdFile.content).containEql(`<a href="/tags/tags.html">tags</a>`);
     should(mdFile.content).containEql(`[[incorrect]]`);
   });
 
