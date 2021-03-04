@@ -51,7 +51,5 @@ describe("preprocess", () => {
     should(txtFile.outputFilename).eql("text.txt")
     should(txtFile.outputRelativePath).eql("text.txt")
     should(folder.title).eql("subfolder")
-    should(mdFile.folderContent === crawled)
-    should(mdFile.mdFiles).deepEqual([mdFile])
   })
 })

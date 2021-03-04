@@ -211,6 +211,11 @@ Folders and files can be skipped from indexing by adding a `noSearch` property i
 
 # What's new
 
+## 1.31
+
+- Serve moved from shorthand `-s` to `-S` to avoid conflict with search.
+- Fix cyclic redundancy on generate-search
+
 ## 1.30
 
 - Support tags in wikilinks.

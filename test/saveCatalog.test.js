@@ -19,10 +19,11 @@ describe("save catalog", () => {
     path: fakePath,
     fs: fakeFs
   }
+  const folderContent = [file1, file2, file3, file4, fileSkipped, skippedFolder, fileInSkippedFolder]
 
   // when
   saveCatalog({
-    folderContent: [file1, file2, file3, file4, fileSkipped, skippedFolder, fileInSkippedFolder],
+    folderContent,
     outputFolder: "output",
     deps
   })

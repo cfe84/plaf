@@ -34,7 +34,7 @@ const serveOptions = [
 ]
 
 const options = [
-  { name: "serve", alias: "s", type: Boolean, subcommands: serveOptions },
+  { name: "serve", alias: "S", type: Boolean, subcommands: serveOptions },
   { name: "help", alias: "h", type: Boolean, multiple: false, description: "Display this message" },
   { name: "log", alias: "l", type: String, multiple: false, description: "Log level (debug, info, warn, error)" },
   { name: "name", alias: "n", type: String, multiple: false, description: "Name for the root" },
