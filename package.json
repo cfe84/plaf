@@ -42,7 +42,7 @@
     "yaml-js": "^0.2.3"
   },
   "devDependencies": {
-    "mocha": "^7.1.0",
+    "mocha": "^10.2.0",
     "node-watch": "^0.6.3",
     "npm-watch": "^0.7.0",
     "nyc": "^15.0.0",
