@@ -15,7 +15,7 @@
         const save = document.getElementById("save-password-{{{id}}}").checked
         if (decrypt_{{{id}}}(password) && save) {
           localStorage.setItem("plaf-password", password);
-          location.reload(); // Reload to help loading JS content
+          window.location.reload(); // Reload to help loading JS content
         }
       } catch (error) {
         console.error(error)
