@@ -6,7 +6,7 @@ const buildDirectoryStructure = ({ outputFolder, folderContent, deps }) => {
     .map(folder => folder.relativePath)
     .sort((a, b) => a.length < b.length)
     .map(folder => deps.path.join(outputFolder, folder))
-    .forEach(folder => deps.fs.mkdirSync(folder))
+    .forEach(folder => { if (!deps.fs.existsSync(folder)) deps.fs.mkdirSync(folder) })
 }
 
 module.exports = buildDirectoryStructure

@@ -12,8 +12,10 @@ const cleanup = ({ outputFolder, deps }) => {
       } else {
         deps.fs.unlinkSync(fullpath)
       }
-    })
-    deps.fs.rmdirSync(folder)
+    });
+    if (folder !== outputFolder) {
+      deps.fs.rmdirSync(folder)
+    }
   }
 
   rmFolder(outputFolder)
