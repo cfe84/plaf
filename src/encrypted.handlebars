@@ -34,8 +34,14 @@
             e.preventDefault()
             decrypt_{{{id}}}()
           }
-        })
-      const password = localStorage.getItem("plaf-password")
+        });
+      const urlParams = new URLSearchParams(window.location.search);
+      const passwordInQueryParameters = urlParams.get('password');
+      const save = urlParams.get('save');
+      const password = passwordInQueryParameters || localStorage.getItem("plaf-password");
+      if (save) {
+        localStorage.setItem("plaf-password", password);
+      }
       if (password) {
         decrypt_{{{id}}}(password)
       }

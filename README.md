@@ -147,6 +147,8 @@ Markdown content can be encrypted using AES and your password. To do so, either 
 
 The interesting thing is that since the content gets replaced by an HTML widget that decrypts itself, you can use the content of multiple encrypted files in an index page and still get it protected but readable if you have the password.
 
+You can pass the password as get parameter, such as `https://mydomain/myEncryptedPage.html?password=myPassword`. You can also pass a save parameter to save it to local storage. (`?password=myPassword&save=true`). This is useful to pass an encrypted url to someone without having to explain how it works, and since GET parameters are part of the body.
+
 **Search**
 
 Plaf uses [Lunr](https://lunrjs.com/guides/getting_started.html) to build a search catalog. If you use `--generate-search` it will build three files:
